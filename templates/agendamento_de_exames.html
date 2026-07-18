@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendar exame | MedAgenda — Central de Exames</title>
+<link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+</head>
+<body>
+  <!-- BARRA LATERAL: navegação entre páginas -->
+  <aside class="barra-lateral">
+    <div class="marca">
+      <span class="ponto"></span>
+      <span>MedAgenda</span>
+    </div>
+
+    <nav class="menu-lateral">
+      <a href="#" class="item-menu ativo">
+        <span class="icone-menu">1</span>
+        <span class="texto-menu">Marcação</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">2</span>
+        <span class="texto-menu">Meus Exames</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">3</span>
+        <span class="texto-menu">Resultados</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">4</span>
+        <span class="texto-menu">Perfil</span>
+      </a>
+    </nav>
+
+    <a href="#" class="item-menu item-sair">
+      <span class="icone-menu">⏻</span>
+      <span class="texto-menu">Sair</span>
+    </a>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="conteudo-principal">
+
+    <header class="cabecalho-principal">
+      <div class="saudacao">
+        <p class="rotulo">Agendamento</p>
+        <h1>Agendar exame</h1>
+      </div>
+    </header>
+
+    <section class="secao">
+      <div class="cabecalho-secao">
+        <h2>Dados do exame</h2>
+      </div>
+
+      <form method="POST" action="{% url 'agendamento_de_exames' %}" class="formulario-secao">
+        {% csrf_token %}
+
+        <div class="grade-campos">
+          <div class="campo">
+            <label for="exame">Tipo de exame</label>
+            <div class="caixa-entrada">
+              <select id="exame" name="exame" required>
+                <option value="" disabled selected>Selecione o exame</option>
+                <option value="Hemograma completo">Hemograma completo</option>
+                <option value="Raio-X">Raio-X</option>
+                <option value="Ultrassonografia">Ultrassonografia</option>
+                <option value="Eletrocardiograma">Eletrocardiograma</option>
+                <option value="Ressonância magnética">Ressonância magnética</option>
+                <option value="Tomografia computadorizada">Tomografia computadorizada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="data_exame">Data do exame</label>
+            <div class="caixa-entrada">
+              <input type="date" id="data_exame" name="data_exame" required>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="botao-primario">Agendar exame</button>
+      </form>
+    </section>
+
+  </main>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar | MedAgenda — Central de Exames</title>
+<link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+
+</head>
+<body>
+<div class="pagina">
+
+  <!-- ESQUERDA: marca / assinatura visual -->
+  <aside class="painel-marca">
+    <div class="marca">
+      <span class="ponto"></span>
+      <span>MedAgenda</span>
+    </div>
+
+    <div class="texto-marca">
+      <p class="rotulo">Central de Exames</p>
+      <h1>Seu horário de exame, sem filas nem ligações.</h1>
+      <p>Consulte datas disponíveis, confirme sua vaga e acompanhe resultados em um só lugar.</p>
+
+      <div class="grafico-pulso">
+        <svg viewBox="0 0 360 90" preserveAspectRatio="none">
+          <path class="linha-pulso" d="M0,45 L60,45 L78,45 L92,14 L110,76 L128,45 L150,45 L165,30 L180,45 L360,45" />
+          <circle class="ponto-horario" cx="230" cy="45" r="3.4"></circle>
+          <circle class="ponto-horario" cx="270" cy="45" r="3.4"></circle>
+          <circle class="ponto-horario ativo" cx="310" cy="45" r="3.4"></circle>
+          <circle class="ponto-horario" cx="350" cy="45" r="3.4"></circle>
+        </svg>
+        <div class="legenda-horario">
+          <span>09:00</span><span>10:30</span><span>13:00 · próximo</span><span>15:30</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape-marca">MEDAGENDA © 2026 — Sistema de Agendamento de Exames</div>
+  </aside>
+
+  <!-- DIREITA: formulário de login -->
+  <main class="painel-formulario">
+    <div class="cartao">
+      <p class="rotulo">Acesso ao paciente</p>
+      <h1>Entrar na sua conta</h1>
+      <p class="subtitulo">Informe seus dados para consultar e agendar exames.</p>
+
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="campo">
+          <label for="identificador">CPF</label>
+          <div class="caixa-entrada">
+            <input type="text" placeholder="000.000.000-00" name="cpf" value='{{ paciente.cpf }}' required>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="senha-login">Senha</label>
+          <div class="caixa-entrada">
+            <input type="password" name="senha" required>
+            <button type="button" class="alternar-visibilidade" data-alvo="senha-login">MOSTRAR</button>
+          </div>
+        </div>
+
+        <div class="linha-espacada">
+          <label class="lembrar-conectado">
+            <input type="checkbox" name="manter-conectado">
+            Manter conectado
+          </label>
+          <a href="#" class="link-discreto">Esqueceu a senha?</a>
+        </div>
+
+        <button type="submit" class="botao-primario">Entrar</button>
+      </form>
+
+      <div class="divisor">ou</div>
+
+      <p class="linha-alternar">Ainda não tem conta? <a href="{% url 'criar_conta' %}">Criar conta</a></p>
+
+      <div class="nota-ajuda">
+        <span class="icone">i</span>
+        <p>Precisa de ajuda para agendar um exame? Ligue para a Central de Atendimento: (00) 0000-0000, de segunda a sexta, das 7h às 19h.</p>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>

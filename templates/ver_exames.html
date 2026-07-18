@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados</title>
+    <link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+</head>
+<body>
+      <!-- BARRA LATERAL: navegação entre páginas -->
+  <aside class="barra-lateral">
+    <div class="marca">
+      <span class="ponto"></span>
+      <span>MedAgenda</span>
+    </div>
+
+    <nav class="menu-lateral">
+      <a href="#" class="item-menu ativo">
+        <span class="icone-menu">1</span>
+        <span class="texto-menu">Marcação</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">2</span>
+        <span class="texto-menu">Meus Exames</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">3</span>
+        <span class="texto-menu">Resultados</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">4</span>
+        <span class="texto-menu">Perfil</span>
+      </a>
+    </nav>
+
+    <a href="#" class="item-menu item-sair">
+      <span class="icone-menu">⏻</span>
+      <span class="texto-menu">Sair</span>
+    </a>
+  </aside>
+
+  <div class="lista-registros">
+
+    {% for exame in exames %}
+    <div class="item-registro">
+
+        <div class="info-registro">
+            <span class="titulo-registro">
+                {{ exame.tipo_exame }}
+            </span>
+
+            <span class="subtitulo-registro">
+                {{ exame.data_exame|date:"d/m/Y" }} • {{ exame.get_status_display }}
+            </span>
+        </div>
+
+        <a href="#" class="link-discreto">
+            Ver resultado
+        </a>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+<div class="paginacao">
+
+    {% if exames.has_previous %}
+        <a href="?page={{ exames.previous_page_number }}" class="link-discreto">
+            ← Anterior
+        </a>
+    {% endif %}
+
+    <span>Página {{ exames.number }} de {{ exames.paginator.num_pages }}</span>
+
+    {% if exames.has_next %}
+        <a href="?page={{ exames.next_page_number }}" class="link-discreto">
+            Próxima →
+        </a>
+    {% endif %}
+
+</div>
+  
+</body>
+</html>

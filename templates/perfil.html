@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu perfil | MedAgenda — Central de Exames</title>
+<link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+</head>
+<body>
+  <!-- BARRA LATERAL: navegação entre páginas -->
+  <aside class="barra-lateral">
+    <div class="marca">
+      <span class="ponto"></span>
+      <span>MedAgenda</span>
+    </div>
+
+    <nav class="menu-lateral">
+      <a href="#" class="item-menu ativo">
+        <span class="icone-menu">1</span>
+        <span class="texto-menu">Marcação</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">2</span>
+        <span class="texto-menu">Meus Exames</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">3</span>
+        <span class="texto-menu">Resultados</span>
+      </a>
+      <a href="#" class="item-menu">
+        <span class="icone-menu">4</span>
+        <span class="texto-menu">Perfil</span>
+      </a>
+    </nav>
+
+    <a href="#" class="item-menu item-sair">
+      <span class="icone-menu">⏻</span>
+      <span class="texto-menu">Sair</span>
+    </a>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="conteudo-principal">
+
+    <header class="cabecalho-principal">
+      <div class="saudacao">
+        <p class="rotulo">Meu perfil</p>
+        <h1>{{ paciente.nome }}</h1>
+      </div>
+
+      <div class="cartao-usuario">
+        <div class="avatar-usuario">{{ paciente.nome }}</div>
+        <div class="dados-usuario">
+          <span class="nome-usuario">{{ paciente.nome }}</span>
+          <span class="cpf-usuario">CPF: {{ paciente.cpf }}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- DADOS PESSOAIS -->
+    <section class="secao">
+      <div class="cabecalho-secao">
+        <h2>Dados pessoais</h2>
+      </div>
+
+      <div class="grade-perfil">
+        <div class="item-perfil">
+          <span class="rotulo-perfil">Nome completo</span>
+          <span class="valor-perfil">{{ paciente.nome }}</span>
+        </div>
+
+        <div class="item-perfil">
+          <span class="rotulo-perfil">CPF</span>
+          <span class="valor-perfil">{{ paciente.cpf }}</span>
+        </div>
+
+        <div class="item-perfil">
+          <span class="rotulo-perfil">Data de nascimento</span>
+          <span class="valor-perfil">{{ paciente.data_nascimento|date:"d/m/Y" }}</span>
+        </div>
+
+        <div class="item-perfil">
+          <span class="rotulo-perfil">E-mail</span>
+          <span class="valor-perfil">{{ paciente.email }}</span>
+        </div>
+
+        <div class="item-perfil">
+          <span class="rotulo-perfil">Telefone</span>
+          <span class="valor-perfil">{{ paciente.telefone }}</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Início | MedAgenda — Central de Exames</title>
+<link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+
+</head>
+<body>
+  
+    <div class="marca">
+      <span class="ponto"></span>
+      <span>MedAgenda</span>
+    </div>
+
+    <nav class="navegacao">
+      <a href="{% url 'marcacao'%}" class="item-menu">
+        <span class="texto-menu">marcacao</span>
+      </a>
+        
+      <a href="{% url 'perfil' %}" class="item-menu">
+        <span class="texto-menu">Perfil</span>
+      </a>
+    </nav>
+
+    <a href="{% url 'login' %}" class="item-menu item-sair">
+      
+      <span class="titulo-navegacao">Sair</span>
+    </a>
+  
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="conteudo-principal">
+
+    <header class="cabecalho-principal">
+      <div class="saudacao">
+        <p class="rotulo">Painel do paciente</p>
+        <h1>Olá, {{ paciente.nome }}</h1>
+      </div>
+   
+      <div class="cartao-usuario">
+        <div class="avatar-usuario">{{ paciente.nome|default:"P"|slice:":1" }}</div>
+        <div class="dados-usuario">
+          <span class="nome-usuario">{{ paciente.nome|default:"Nome do paciente" }}</span>
+          <span class="cpf-usuario">CPF: {{ paciente.cpf }}</span>
+        </div>
+      </div>
+    </header>
+
+    <h1>Meus Agendamentos</h1>
+    <!-- RELATÓRIOS DE CONSULTA -->
+    <section class="secao">
+      <div class="cabecalho-secao">
+        <h2>Consultas</h2>
+        <a href="{% url 'ver_consultas' %}" class="link-discreto">Ver todos</a>
+      </div>
+
+      <div class="lista-registros">
+        {% for consulta in consultas %}
+        <div class="item-registro">
+          <div class="info-registro">
+            <span class="titulo-registro">{{consulta.especialidade}} - {{ consulta.data_consulta|date:"d/m/Y" }}</span>
+          </div>
+          <span class="status-badge status-{{ consulta.status|lower }}">{{ consulta.status }}</span>
+          <a href="#" class="link-discreto">Ver relatório</a>
+        </div>
+        {% empty %}
+        <div class="estado-vazio">
+          <p>Nenhum relatório de consulta encontrado.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- EXAMES --> 
+    <section class="secao">
+      <div class="cabecalho-secao">
+        <h2>Exames</h2>
+        <a href="{% url 'ver_exames' %}" class="link-discreto">Ver todos</a>
+      </div>
+
+      <div class="lista-registros">
+        {% for exame in exames %}
+        <div class="item-registro">
+          <div class="info-registro">
+            <span class="titulo-registro">{{ exame.tipo_exame}} - {{ exame.data_exame|date:"d/m/Y" }} </span>
+            <span class="subtitulo-registro">{{ exame.status }}</span>
+          </div>
+          <a href="#" class="link-discreto">Ver resumo</a>
+        </div>
+        {% empty %}
+        <div class="estado-vazio">
+          <p>Nenhum exame encontrado.</p>
+        </div>
+        {% endfor %}
+      </div>
+   
+   
+    </section>
+
+  </main>
+
+</div>
+</body>
+</html>

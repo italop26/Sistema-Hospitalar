@@ -1,0 +1,1594 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:#f4f7fb;
+    color:#1f2937;
+}
+
+
+:root{
+
+    --cor-primaria:#2563eb;
+    --cor-secundaria:#1d4ed8;
+
+    --verde:#16a34a;
+    --vermelho:#dc2626;
+    --laranja:#ea580c;
+
+    --cinza:#6b7280;
+
+    --branco:#ffffff;
+
+    --borda:#e5e7eb;
+
+    --sombra:0 10px 30px rgba(0,0,0,.08);
+
+    --raio:16px;
+
+}
+
+/* =========================
+   LINKS
+========================= */
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+ul{
+    list-style:none;
+}
+
+/* =========================
+   BOTÕES
+========================= */
+
+.botao-primario{
+
+    width:100%;
+
+    border:none;
+
+    background:var(--cor-primaria);
+
+    color:white;
+
+    padding:16px;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.botao-primario:hover{
+
+    background:var(--cor-secundaria);
+
+    transform:translateY(-2px);
+
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+select,
+textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid var(--borda);
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:.3s;
+
+    background:white;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    border-color:var(--cor-primaria);
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+/* =========================
+   LABELS
+========================= */
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.cartao{
+
+    background:white;
+
+    border-radius:var(--raio);
+
+    padding:35px;
+
+    box-shadow:var(--sombra);
+
+}
+
+/* =========================
+   TITULOS
+========================= */
+
+.rotulo{
+
+    color:var(--cor-primaria);
+
+    font-size:14px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+    text-transform:uppercase;
+
+}
+
+h1{
+
+    font-size:34px;
+
+    margin-bottom:10px;
+
+}
+
+h2{
+
+    font-size:23px;
+
+}
+
+.subtitulo{
+
+    color:var(--cinza);
+
+    margin-bottom:30px;
+
+    line-height:1.6;
+
+}
+
+/*======================================
+    LOGIN / CADASTRO
+======================================*/
+
+.pagina{
+
+    display:grid;
+    grid-template-columns:430px 1fr;
+    min-height:100vh;
+
+}
+
+/*======================================
+    PAINEL ESQUERDO
+======================================*/
+
+.painel-marca{
+
+    background:linear-gradient(180deg,#2563eb,#1d4ed8);
+
+    color:#fff;
+
+    padding:45px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+}
+
+.marca{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-size:26px;
+
+    font-weight:bold;
+
+}
+
+.ponto{
+
+    width:16px;
+
+    height:16px;
+
+    background:white;
+
+    border-radius:50%;
+
+}
+
+.texto-marca{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+}
+
+.texto-marca h1{
+
+    color:white;
+
+    font-size:38px;
+
+    line-height:1.2;
+
+}
+
+.texto-marca p{
+
+    color:#dbeafe;
+
+    line-height:1.8;
+
+}
+
+.lista-etapas{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    margin-top:25px;
+
+}
+
+.etapa{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.marca-etapa{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.15);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:bold;
+
+}
+
+.concluida .marca-etapa{
+
+    background:white;
+
+    color:#2563eb;
+
+}
+
+.rotulo-etapa{
+
+    font-size:15px;
+
+}
+
+.rodape-marca{
+
+    font-size:13px;
+
+    opacity:.8;
+
+}
+
+/*======================================
+    FORMULÁRIO
+======================================*/
+
+.painel-formulario{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:50px;
+
+    background:#f5f7fb;
+
+}
+
+.cartao{
+
+    width:100%;
+
+    max-width:720px;
+
+}
+
+form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+}
+
+.grade-campos{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+.completo{
+
+    grid-column:1/3;
+
+}
+
+.campo{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.campo label{
+
+    margin-bottom:8px;
+
+}
+
+.caixa-entrada{
+
+    position:relative;
+
+}
+
+.caixa-entrada input{
+
+    padding-right:90px;
+
+}
+
+.alternar-visibilidade{
+
+    position:absolute;
+
+    right:10px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    border:none;
+
+    background:none;
+
+    color:#2563eb;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+.dica{
+
+    margin-top:8px;
+
+    font-size:13px;
+
+    color:#6b7280;
+
+}
+
+/*======================================
+    CHECKBOX
+======================================*/
+
+.aceite-termos{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+    font-size:14px;
+
+    color:#6b7280;
+
+    line-height:1.7;
+
+}
+
+.aceite-termos input{
+
+    width:18px;
+
+    height:18px;
+
+    margin-top:2px;
+
+}
+
+.aceite-termos a{
+
+    color:#2563eb;
+
+    font-weight:600;
+
+}
+
+/*======================================
+    LINK LOGIN
+======================================*/
+
+.linha-alternar{
+
+    margin-top:30px;
+
+    text-align:center;
+
+    color:#6b7280;
+
+}
+
+.linha-alternar a{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+}
+
+/*======================================
+    HOVER
+======================================*/
+
+input:hover,
+select:hover,
+textarea:hover{
+
+    border-color:#2563eb;
+
+}
+
+.cartao{
+
+    animation:aparecer .5s ease;
+
+}
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/*======================================
+    RESPONSIVIDADE
+======================================*/
+
+@media(max-width:950px){
+
+    .pagina{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .painel-marca{
+
+        display:none;
+
+    }
+
+    .painel-formulario{
+
+        padding:25px;
+
+    }
+
+    .grade-campos{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .completo{
+
+        grid-column:auto;
+
+    }
+
+}
+
+/*======================================
+            DASHBOARD
+======================================*/
+
+.layout-principal{
+
+    display:flex;
+    min-height:100vh;
+    background:#f4f7fb;
+
+}
+
+/*======================================
+            SIDEBAR
+======================================*/
+
+.barra-lateral{
+
+    width:280px;
+
+    background:#ffffff;
+
+    border-right:1px solid #e5e7eb;
+
+    padding:35px 25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    box-shadow:0 0 25px rgba(0,0,0,.05);
+
+}
+
+.menu-lateral{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    margin-top:45px;
+
+}
+
+.item-menu{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    color:#4b5563;
+
+    transition:.3s;
+
+    font-weight:600;
+
+}
+
+.item-menu:hover{
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+}
+
+.item-menu.ativo{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.icone-menu{
+
+    width:38px;
+
+    height:38px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:10px;
+
+    background:rgba(37,99,235,.10);
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}
+
+.item-menu.ativo .icone-menu{
+
+    background:white;
+
+    color:#2563eb;
+
+}
+
+.item-sair{
+
+    margin-top:auto;
+
+}
+
+/*======================================
+            CONTEÚDO
+======================================*/
+
+.conteudo-principal{
+
+    flex:1;
+
+    padding:40px;
+
+}
+
+.cabecalho-principal{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:35px;
+
+}
+
+/*======================================
+            USUÁRIO
+======================================*/
+
+.cartao-usuario{
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:15px 20px;
+
+    border-radius:15px;
+
+    box-shadow:var(--sombra);
+
+}
+
+.avatar-usuario{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+}
+
+.dados-usuario{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.nome-usuario{
+
+    font-weight:bold;
+
+}
+
+.cpf-usuario{
+
+    color:#6b7280;
+
+    font-size:14px;
+
+}
+
+/*======================================
+            SEÇÕES
+======================================*/
+
+.secao{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    margin-bottom:30px;
+
+    box-shadow:var(--sombra);
+
+}
+
+.cabecalho-secao{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.link-discreto{
+
+    color:#2563eb;
+
+    font-weight:600;
+
+}
+
+/*======================================
+        LISTA DE REGISTROS
+======================================*/
+
+.lista-registros{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.item-registro{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:14px;
+
+    transition:.3s;
+
+}
+
+.item-registro:hover{
+
+    border-color:#2563eb;
+
+    transform:translateY(-2px);
+
+}
+
+.info-registro{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.titulo-registro{
+
+    font-weight:bold;
+
+    margin-bottom:5px;
+
+}
+
+.subtitulo-registro{
+
+    color:#6b7280;
+
+    font-size:14px;
+
+}
+
+/*======================================
+            STATUS
+======================================*/
+
+.status-badge{
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.status-agendado{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+.status-concluido{
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+}
+
+.status-cancelado{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+/*======================================
+            PERFIL
+======================================*/
+
+.grade-perfil{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+.item-perfil{
+
+    background:#f9fafb;
+
+    border:1px solid #e5e7eb;
+
+    padding:20px;
+
+    border-radius:15px;
+
+}
+
+.rotulo-perfil{
+
+    display:block;
+
+    color:#6b7280;
+
+    font-size:13px;
+
+    margin-bottom:8px;
+
+}
+
+.valor-perfil{
+
+    font-size:17px;
+
+    font-weight:600;
+
+}
+
+/*======================================
+            FORMULÁRIOS
+======================================*/
+
+.formulario-secao{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
+}
+
+textarea{
+
+    resize:vertical;
+
+    min-height:120px;
+
+}
+
+/*======================================
+            ESTADO VAZIO
+======================================*/
+
+.estado-vazio{
+
+    text-align:center;
+
+    padding:40px;
+
+    border:2px dashed #d1d5db;
+
+    border-radius:15px;
+
+    color:#6b7280;
+
+}
+
+/*======================================
+            RESPONSIVO
+======================================*/
+
+@media(max-width:1000px){
+
+    .barra-lateral{
+
+        display:none;
+
+    }
+
+    .conteudo-principal{
+
+        padding:25px;
+
+    }
+
+    .cabecalho-principal{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+    }
+
+    .grade-perfil{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    .item-registro{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+}
+
+/*======================================
+        CARD DA NAVEGAÇÃO
+======================================*/
+
+
+.navegacao{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    margin-top:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+    border:1px solid #e5e7eb;
+
+}
+
+.titulo-navegacao{
+
+    font-size:16px;
+
+    margin-bottom:18px;
+
+    color:#6b7280;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.menu-lateral{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+/*======================================
+        CARDS DE ESTATÍSTICAS
+======================================*/
+
+.grade-cards{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:22px;
+    margin-bottom:30px;
+
+}
+
+.card-estatistica{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:var(--sombra);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    transition:.3s;
+
+}
+
+.card-estatistica:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.card-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.card-info span{
+
+    color:#6b7280;
+    font-size:14px;
+
+}
+
+.card-info h2{
+
+    font-size:34px;
+
+}
+
+.icone-estatistica{
+
+    width:65px;
+    height:65px;
+
+    border-radius:18px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:26px;
+
+    color:white;
+
+}
+
+.azul{
+
+    background:#2563eb;
+
+}
+
+.verde{
+
+    background:#16a34a;
+
+}
+
+.vermelho{
+
+    background:#dc2626;
+
+}
+
+.laranja{
+
+    background:#ea580c;
+
+}
+
+/*======================================
+            TABELAS
+======================================*/
+
+.tabela{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
+.tabela thead{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.tabela th{
+
+    padding:18px;
+
+    text-align:left;
+
+}
+
+.tabela td{
+
+    padding:16px;
+
+    border-bottom:1px solid #e5e7eb;
+
+}
+
+.tabela tbody tr{
+
+    transition:.3s;
+
+}
+
+.tabela tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+/*======================================
+            BOTÕES
+======================================*/
+
+.botao-secundario{
+
+    background:#f3f4f6;
+
+    color:#374151;
+
+    border:none;
+
+    padding:12px 18px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.botao-secundario:hover{
+
+    background:#e5e7eb;
+
+}
+
+.botao-editar{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.botao-editar:hover{
+
+    background:#1d4ed8;
+
+}
+
+.botao-excluir{
+
+    background:#dc2626;
+
+    color:white;
+
+}
+
+.botao-excluir:hover{
+
+    background:#b91c1c;
+
+}
+
+/*======================================
+            ALERTAS
+======================================*/
+
+.alerta{
+
+    padding:18px;
+
+    border-radius:15px;
+
+    margin-bottom:25px;
+
+    font-weight:600;
+
+}
+
+.alerta-sucesso{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+.alerta-erro{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+}
+
+.alerta-aviso{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+.alerta-info{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+}
+
+/*======================================
+            PAGINAÇÃO
+======================================*/
+
+.paginacao{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-top:30px;
+
+}
+
+.pagina-item{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:10px;
+
+    background:white;
+
+    border:1px solid #e5e7eb;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.pagina-item:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.pagina-item.ativa{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+/*======================================
+            BADGES
+======================================*/
+
+.badge{
+
+    padding:7px 12px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.badge-ativo{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+.badge-pendente{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+.badge-cancelado{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+}
+
+/*======================================
+            SCROLLBAR
+======================================*/
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#eef2f7;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#2563eb;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#1d4ed8;
+
+}
+
+/*======================================
+            FOOTER
+======================================*/
+
+.rodape{
+
+    margin-top:35px;
+
+    text-align:center;
+
+    color:#9ca3af;
+
+    font-size:14px;
+
+}
+
+/*======================================
+            ANIMAÇÕES
+======================================*/
+
+.fade{
+
+    animation:fade .4s ease;
+
+}
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(15px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/*======================================
+        SOMBRA NOS CARDS
+======================================*/
+
+.cartao:hover,
+.secao:hover{
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+}
+
+.abas-marcacao{
+    display:flex;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.aba{
+    text-decoration:none;
+    padding:10px 22px;
+    border-radius:10px;
+    background:#ececec;
+    color:#333;
+    font-weight:600;
+    transition:.2s;
+}
+
+.aba:hover{
+    background:#dcdcdc;
+}
+
+.aba.ativa{
+    background:#2563eb;
+    color:#fff;
+}
