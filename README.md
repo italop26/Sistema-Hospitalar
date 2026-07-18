@@ -75,11 +75,3 @@ O sistema está funcional, porém ele vai ter mais funcionalidades para poder qu
 ## 📸 Screenshots
 
 > Em breve.
-
----
-
-## 📄 Licença
-
-Este projeto é destinado para fins de estudo e portfólio.
-
-Se quiser, depois podemos Faça um README mais completo, com badges do GitHub, GIFs do sistema funcionando, árvore de pastas, instruções de instalação e imagens das telas, deixando-o no padrão de projetos profissionais de portfólio.
