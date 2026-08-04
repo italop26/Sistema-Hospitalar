@@ -42,19 +42,31 @@ def criar_conta(request):
         email = request.POST.get('email'),
         telefone = request.POST.get('telefone'),
         data_nascimento = request.POST.get('data_nascimento'),
+        cpf= request.POST.get('cpf')
         )
         if paciente:
-            return render(request, 'login.html')
-        return HttpResponse("Erro ao criar conta")
+            return redirect('login')
+        return HttpResponse('Erro ao criar conta')
     return render(request, 'criar_conta.html')
 
 def principal(request):
-    paciente = request.user.paciente if request.user.is_authenticated else None
-    consultas = Consulta.objects.filter(paciente=paciente)
-    exames = Exame.objects.filter(paciente=paciente)
-    
-    return render(request, 'principal.html', {'paciente': paciente, 'consultas': consultas, 'exames': exames})
 
+    if request.user.is_authenticated:
+        paciente = request.user.paciente
+
+        consultas = Consulta.objects.filter(paciente=paciente)
+        exames = Exame.objects.filter(paciente=paciente)
+
+    return render(
+        request,
+        'principal.html',
+        {
+            'paciente': paciente,
+            'consultas': consultas,
+            'exames': exames,
+        }
+    )
+    
 def marcacao(request):
     paciente = request.user.paciente
     tipo = request.GET.get("tipo", "consulta")

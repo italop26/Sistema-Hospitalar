@@ -48,7 +48,7 @@
       <h1>Criar sua conta</h1>
       <p class="subtitulo">Preencha os dados abaixo para começar a agendar seus exames.</p>
 
-      <form method="POST" action="{% url 'criar_conta %'}">
+      <form method="POST" action="{% url 'criar_conta' %}">
         {% csrf_token %}
         <div class="grade-campos">
           <div class="campo completo">
