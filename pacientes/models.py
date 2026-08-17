@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from gestao_clinica.choices import Status
 
 
 class Paciente(models.Model):
@@ -19,27 +20,25 @@ class Paciente(models.Model):
 class Consulta(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     especialidade = models.CharField(max_length=200)
+    medico = models.CharField(max_length=200)
     data_consulta = models.DateTimeField()
+    status = models.CharField(max_length=20,
+        choices=Status.choices,
+        default=Status.AGENDADO
+    )
     def __str__(self):
         return f"Consulta de {self.paciente.nome} em {self.data_consulta}"
 
-    
-class StatusExame(models.IntegerChoices):
-    
-    AGENDADO = 1, "Agendado"
-    COLETADO = 2, "Coletado"
-    EM_ANALISE = 3, "Em análise"
-    CONCLUIDO = 4, "Concluído"
-    CANCELADO = 5, "Cancelado"
+
 
 class Exame(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     data_exame = models.DateTimeField()
     tipo_exame = models.CharField(max_length=100)
-    status = models.IntegerField(
-        choices=StatusExame.choices,
-        default=StatusExame.AGENDADO
+    medico = models.CharField(max_length=200)
+    status = models.CharField(max_length=20,
+        choices=Status.choices,
+        default=Status.AGENDADO
     )
-    descricao = models.TextField()
     def __str__(self):
         return f"Exame de {self.paciente.nome} em {self.data_exame}"

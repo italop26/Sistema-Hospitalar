@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Paciente, Consulta, Exame, StatusExame
+from .models import Paciente, Consulta, Exame
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
@@ -24,7 +24,7 @@ def login_view(request):
             return redirect('principal')
         
         return HttpResponse("CPF ou senha inválidos")
-    return render(request, 'login.html')
+    return render(request, 'paciente/login.html')
         
 
 def criar_conta(request):
@@ -47,7 +47,7 @@ def criar_conta(request):
         if paciente:
             return redirect('login')
         return HttpResponse('Erro ao criar conta')
-    return render(request, 'criar_conta.html')
+    return render(request, 'paciente/criar_conta.html')
 
 def principal(request):
 
@@ -59,7 +59,7 @@ def principal(request):
 
     return render(
         request,
-        'principal.html',
+        'paciente/principal.html',
         {
             'paciente': paciente,
             'consultas': consultas,
@@ -91,7 +91,7 @@ def marcacao(request):
 
         return redirect("principal")
 
-    return render(request, "marcacao.html", {
+    return render(request, "paciente/marcacao.html", {
         "tipo": tipo
     })
             
@@ -101,7 +101,7 @@ def perfil(request):
     if request.user.is_authenticated:
 
         paciente = request.user.paciente
-        return render(request, 'perfil.html', {'paciente': paciente})
+        return render(request, 'paciente/perfil.html', {'paciente': paciente})
         
            
     else:
@@ -114,7 +114,7 @@ def ver_exames(request):
     page = request.GET.get("page")
 
     exames = paginator.get_page(page)
-    return render(request, 'ver_exames.html', {'exames': exames})
+    return render(request, 'paciente/ver_exames.html', {'exames': exames})
 
 def ver_consultas(request):
     paciente = request.user.paciente
@@ -123,7 +123,7 @@ def ver_consultas(request):
     page = request.GET.get("page")
 
     exames = paginator.get_page(page)
-    return render(request, 'ver_consultas.html', {'consultas': consultas})
+    return render(request, 'paciente/ver_consultas.html', {'consultas': consultas})
 
 def sair(request):
     logout(request)

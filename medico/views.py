@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from models import Medico
 
-# Create your views here.
+def perfil(request):
+    perfil = Medico.objects.all()
+    return render(request, 'perfil.html', {'perfil': perfil})
+

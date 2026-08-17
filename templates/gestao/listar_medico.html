@@ -1,0 +1,116 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}Médicos{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>Médicos</h2>
+
+        <a href="{% url 'gestao_clinica:cadastrar_medico' %}"
+           class="botao-primario">
+
+            Novo Médico
+
+        </a>
+
+    </div>
+
+    <table class="tabela">
+
+        <thead>
+
+            <tr>
+
+                <th>Nome</th>
+                <th>CRM</th>
+                <th>Especialidade</th>
+                <th>Status</th>
+                <th>Ações</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for medico in medicos %}
+
+            <tr>
+
+                <td>
+
+                    {{ medico.user.get_full_name }}
+
+                </td>
+
+                <td>
+
+                    {{ medico.crm }}
+
+                </td>
+
+                <td>
+
+                    {{ medico.especialidade }}
+
+                </td>
+
+                <td>
+
+                    {% if medico.ativo %}
+
+                        Ativo
+
+                    {% else %}
+
+                        Inativo
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <a href="{% url 'gestao_clinica:editar_medico' medico.id %}">
+                        Editar
+                    </a>
+
+                    |
+
+                    <a href="{% url 'gestao_clinica:alterar_status_medico' medico.id %}">
+                        {% if medico.ativo %}
+                            Inativar
+                        {% else %}
+                            Ativar
+                        {% endif %}
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+
+                <td colspan="5">
+
+                    Nenhum médico cadastrado.
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "gestao/base.html" %}
+
+{% block content %}
+
+<div class="conteudo-principal">
+
+    <div class="cabecalho-principal">
+        <div>
+            <span class="rotulo">Gestão</span>
+            <a href="{% url 'gestao_clinica:criar_gestor'%}" class="item-menu"></a>
+            <span class="texto-menu">Gestao</span>
+            <p class="subtitulo">
+                Cadastre um novo usuário para administrar o sistema.
+            </p>
+        </div>
+
+        <div>
+            <span class="rotulo">Gestão</span>
+            <a href="{% url 'gestao_clinica:criar_medico' %}" class="item-menu"></a>
+            <p class="subtitulo">
+                Cadastre um novo médico no sistema.
+            </p>
+            
+        </div>
+    </div>
+
+    <section class="secao">
+
+        <div class="cabecalho-secao">
+            <h2>Dados do gestor</h2>
+        </div>
+
+        {% if erro %}
+            <div class="alerta alerta-erro">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'gestao_clinica:criar_gestor' %}">
+            {% csrf_token %}
+
+            <div class="grade-campos">
+
+                <div class="campo">
+                    <label for="nome">Nome</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="username">Usuário</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="confirmar_senha">Confirmar senha</label>
+                    <input
+                        type="password"
+                        id="confirmar_senha"
+                        name="confirmar_senha"
+                        required
+                    >
+                </div>
+
+                <div class="campo completo">
+                    <label for="Gestor_adm">
+                        Chefe da gestão?
+                    </label>
+
+                    <div class="aceite-termos">
+                        <input
+                            type="checkbox"
+                            id="Gestor_adm"
+                            name="Gestor_adm"
+                        >
+
+                        <label for="Gestor_adm">
+                            Permitir que este gestor administre outros gestores.
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="botao-primario">
+                Cadastrar gestor
+            </button>
+
+            <a
+                href="{% url 'gestao_clinica:lista_gestores' %}"
+                class="botao-secundario"
+            >
+                Cancelar
+            </a>
+
+        </form>
+
+    </section>
+
+</div>
+
+{% endblock %}

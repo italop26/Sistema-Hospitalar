@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gestão Clínica</title>
+
+    <link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+</head>
+<body>
+{% if erro %}
+    <div class="erro">
+        {{ erro }}
+    </div>
+{% endif %}
+
+<div class="container-login">
+
+    <div class="cartao-login">
+
+        <h1>Gestão Clínica</h1>
+
+        <p>
+            Faça login para acessar o painel administrativo.
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alerta alerta-erro">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'gestao_clinica:login_gestor' %}">
+            {% csrf_token %}
+
+            <div class="campo">
+
+                <label for="username">
+                    Usuário
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    class="caixa-entrada"
+                    required>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="password">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    name="senha"
+                    id="password"
+                    class="caixa-entrada"
+                    required>
+
+            </div>
+
+            <button type="submit" class="botao-primario">
+                Entrar
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

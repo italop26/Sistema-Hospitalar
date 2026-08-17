@@ -1,0 +1,532 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block titulo %}
+Dashboard
+{% endblock %}
+
+{% block subtitulo %}
+Visão geral da clínica
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="layout-principal">
+
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+    ====================================================== -->
+
+    <main class="conteudo-principal">
+
+
+        <!-- =================================================
+             CABEÇALHO
+        ================================================== -->
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Gestão
+                </span>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p class="subtitulo">
+                    Acompanhe consultas, exames e registros da clínica.
+                </p>
+
+            </div>
+
+
+            <div class="cartao-usuario">
+
+                <div class="avatar-usuario">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <div class="dados-usuario">
+
+                    <span class="nome-usuario">
+                        {{ request.user.username }}
+                    </span>
+
+                    <span class="cpf-usuario">
+                        Área de gestão
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             ESTATÍSTICAS
+        ================================================== -->
+
+        <section class="grade-cards">
+
+
+            <!-- PACIENTES -->
+
+            <div class="card-estatistica">
+
+                <div class="card-info">
+
+                    <span>
+                        Pacientes
+                    </span>
+
+                    <h2>
+                        {{ pacientes }}
+                    </h2>
+
+                </div>
+
+                <div class="icone-estatistica azul">
+                    👥
+                </div>
+
+            </div>
+
+
+            <!-- MÉDICOS -->
+
+            <div class="card-estatistica">
+
+                <div class="card-info">
+
+                    <span>
+                        Médicos
+                    </span>
+
+                    <h2>
+                        {{ medicos }}
+                    </h2>
+
+                </div>
+
+                <div class="icone-estatistica verde">
+                    👨‍⚕️
+                </div>
+
+            </div>
+
+
+            <!-- CONSULTAS -->
+
+            <div class="card-estatistica">
+
+                <div class="card-info">
+
+                    <span>
+                        Consultas hoje
+                    </span>
+
+                    <h2>
+                        {{ consultas_de_hoje }}
+                    </h2>
+
+                </div>
+
+                <div class="icone-estatistica laranja">
+                    📅
+                </div>
+
+            </div>
+
+
+            <!-- EXAMES -->
+
+            <div class="card-estatistica">
+
+                <div class="card-info">
+
+                    <span>
+                        Exames hoje
+                    </span>
+
+                    <h2>
+                        {{ exames_de_hoje }}
+                    </h2>
+
+                </div>
+
+                <div class="icone-estatistica vermelho">
+                    🧪
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             NAVEGAÇÃO
+        ================================================== -->
+
+        <section class="navegacao">
+
+            <div class="titulo-navegacao">
+                Navegação
+            </div>
+
+
+            <nav class="menu-lateral">
+
+                <a href="#" class="item-menu ativo">
+
+                    <span class="icone-menu">
+                        ⌂
+                    </span>
+
+                    <span>
+                        Início
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="item-menu">
+
+                    <span class="icone-menu">
+                        ◷
+                    </span>
+
+                    <span>
+                        Acompanhamento
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="item-menu">
+
+                    <span class="icone-menu">
+                        P
+                    </span>
+
+                    <span>
+                        Pacientes
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="item-menu">
+
+                    <span class="icone-menu">
+                        C
+                    </span>
+
+                    <span>
+                        Consultas
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="item-menu">
+
+                    <span class="icone-menu">
+                        E
+                    </span>
+
+                    <span>
+                        Exames
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="item-menu">
+
+                    <span class="icone-menu">
+                        M
+                    </span>
+
+                    <span>
+                        Médicos
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="item-menu">
+
+                    <span class="icone-menu">
+                        ≡
+                    </span>
+
+                    <span>
+                        Todos os registros
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </section>
+
+
+        <!-- =================================================
+             ACOMPANHAMENTO
+        ================================================== -->
+
+        <section class="secao">
+
+
+            <div class="cabecalho-secao">
+
+                <div>
+
+                    <span class="rotulo">
+                        Acompanhamento
+                    </span>
+
+                    <h2>
+                        Consultas e exames
+                    </h2>
+
+                </div>
+
+
+                <a href="#" class="link-discreto">
+                    Ver todos
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 DATAS
+            ================================================== -->
+
+            <div class="abas-marcacao">
+
+                {% for dia in dias %}
+
+                    <a
+                        href="#dia-{{ dia.data|date:'Y-m-d' }}"
+                        class="aba {% if dia.hoje %}ativa{% endif %}"
+                    >
+
+                        <span>
+                            {{ dia.data|date:"D" }}
+                        </span>
+
+                        <strong>
+                            {{ dia.data|date:"d/m" }}
+                        </strong>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- =================================================
+                 REGISTROS DOS 10 DIAS
+            ================================================== -->
+
+            {% for dia in dias %}
+
+                <div
+                    class="secao"
+                    id="dia-{{ dia.data|date:'Y-m-d' }}"
+                >
+
+                    <div class="cabecalho-secao">
+
+                        <div>
+
+                            <h2>
+
+                                {% if dia.hoje %}
+                                    Hoje
+                                {% else %}
+                                    {{ dia.data|date:"d/m/Y" }}
+                                {% endif %}
+
+                            </h2>
+
+                        </div>
+
+
+                        <span class="status-badge status-agendado">
+
+                            {{ dia.total }}
+
+                            {% if dia.total == 1 %}
+                                registro
+                            {% else %}
+                                registros
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         CONSULTAS
+                    ========================================== -->
+
+                    {% if dia.consultas %}
+
+                        <div class="lista-registros">
+
+                            {% for consulta in dia.consultas %}
+
+                                <div class="item-registro">
+
+                                    <div class="info-registro">
+
+                                        <span class="titulo-registro">
+
+                                            {{ consulta.paciente.nome }}
+
+                                        </span>
+
+
+                                        <span class="subtitulo-registro">
+
+                                            Consulta •
+                                            {{ consulta.especialidade }}
+                                            •
+                                            {{ consulta.data_consulta|date:"H:i" }}
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <span class="status-badge
+                                        {% if consulta.status == 'AGENDADO' %}
+                                            status-agendado
+                                        {% elif consulta.status == 'CONCLUIDO' %}
+                                            status-concluido
+                                        {% elif consulta.status == 'CANCELADO' %}
+                                            status-cancelado
+                                        {% endif %}
+                                    ">
+
+                                        {{ consulta.get_status_display }}
+
+                                    </span>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- =========================================
+                         EXAMES
+                    ========================================== -->
+
+                    {% if dia.exames %}
+
+                        <div class="lista-registros">
+
+                            {% for exame in dia.exames %}
+
+                                <div class="item-registro">
+
+                                    <div class="info-registro">
+
+                                        <span class="titulo-registro">
+
+                                            {{ exame.paciente.nome }}
+
+                                        </span>
+
+
+                                        <span class="subtitulo-registro">
+
+                                            Exame •
+                                            {{ exame.tipo_exame }}
+                                            •
+                                            {{ exame.data_exame|date:"H:i" }}
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <span class="status-badge
+                                        {% if exame.status == 'AGENDADO' %}
+                                            status-agendado
+                                        {% elif exame.status == 'CONCLUIDO' %}
+                                            status-concluido
+                                        {% elif exame.status == 'CANCELADO' %}
+                                            status-cancelado
+                                        {% endif %}
+                                    ">
+
+                                        {{ exame.get_status_display }}
+
+                                    </span>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- =========================================
+                         NENHUM REGISTRO
+                    ========================================== -->
+
+                    {% if not dia.consultas and not dia.exames %}
+
+                        <div class="estado-vazio">
+
+                            Nenhuma consulta ou exame neste dia.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+
+        </section>
+
+
+        <!-- =================================================
+             RODAPÉ
+        ================================================== -->
+
+        <footer class="rodape">
+
+            Sistema de Gestão Clínica
+
+        </footer>
+
+
+    </main>
+
+</div>
