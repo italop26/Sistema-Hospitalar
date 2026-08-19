@@ -8,32 +8,35 @@ Um sistema web para gerenciamento hospitalar desenvolvido com Django, com um foc
 
 ---
 
-## ✨ Funcionalidades atuais
+Funcionalidades atuais
+👤 Paciente
+Cadastro de pacientes
+Login e autenticação
+Visualização do perfil
+Agendamento de consultas e exames
+Visualização de consultas
+Listagem de exames
+Visualização dos resultados dos exames
+Acesso às informações de atendimento
 
-* Cadastro de pacientes
-* Login com autenticação
-* Visualização do perfil do paciente
-* Agendamento de consultas e exames
-* Listagem de exames
-* Visualização de resultados de exames
-* API REST utilizando Django REST Framework
-* Autenticação com JWT
-* Banco de dados MySQL
+🏥 Gestão
+Painel de gestão
+Gerenciamento de pacientes
+Gerenciamento de consultas
+Gerenciamento de exames
+Visualização dos atendimentos
+Controle e atualização de informações dos atendimentos
 
----
-
-## 🚧 Funcionalidades planejadas
-
-* Dashboard mais completo
-* Histórico completo de consultas
-* Paginação dos exames
-* Pesquisa e filtros
-* Painel administrativo aprimorado
-* Melhorias na interface (UI/UX)
-* Docker
-* Deploy em produção
-* Testes automatizados
-* Logs e monitoramento
+🚧 Funcionalidades planejadas
+Histórico completo de consultas
+Paginação dos exames
+Pesquisa e filtros
+Painel administrativo aprimorado
+Melhorias na interface (UI/UX)
+Docker
+Implantação em produção
+Testes automatizados
+Logs e rastreamento
 
 ---
 
