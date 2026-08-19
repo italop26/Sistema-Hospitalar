@@ -1,0 +1,194 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Detalhes do Médico
+{% endblock %}
+
+{% block titulo %}
+Detalhes do Médico
+{% endblock %}
+
+{% block subtitulo %}
+Informações completas do médico
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>
+            {{ medico.user.get_full_name }}
+        </h2>
+
+        {% if medico.ativo %}
+
+            <span class="status-badge status-concluido">
+                Ativo
+            </span>
+
+        {% else %}
+
+            <span class="status-badge status-cancelado">
+                Inativo
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="grade-perfil">
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Nome
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.user.get_full_name }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Username
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.user.username }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                E-mail
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.user.email }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Idade
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.idade }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                CPF
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.cpf }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                CRM
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.crm }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Especialidade
+            </span>
+
+            <span class="valor-perfil">
+                {{ medico.especialidade }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Status
+            </span>
+
+            <span class="valor-perfil">
+
+                {% if medico.ativo %}
+                    Ativo
+                {% else %}
+                    Inativo
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div style="display:flex; gap:12px; margin-top:30px;">
+
+        <a href="{% url 'gestao_clinica:editar_medico' medico.id %}"
+           class="botao-secundario botao-editar">
+
+            Atualizar Médico
+
+        </a>
+
+
+        <form method="POST"
+              action="{% url 'gestao_clinica:excluir_medico' medico.id %}"
+              style="display:inline;">
+
+            {% csrf_token %}
+
+            <button type="submit"
+                    class="botao-secundario botao-excluir"
+                    onclick="return confirm('Tem certeza que deseja excluir este médico?');">
+
+                Excluir Médico
+
+            </button>
+
+        </form>
+
+
+        <a href="{% url 'gestao_clinica:listar_medicos' %}"
+           class="botao-secundario">
+
+            Voltar
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

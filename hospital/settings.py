@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'gestao_clinica',
     'medico',
     'api',
+    'core'
     
 ]
 

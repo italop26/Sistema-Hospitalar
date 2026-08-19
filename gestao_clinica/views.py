@@ -12,11 +12,14 @@ from django.contrib.auth.models import User
 from medico.models import Medico
 from .models import Especialidade
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponseForbidden
-from datetime import datetime, timedelta
+from datetime import timedelta, date
 from django.utils import timezone
-from pacientes.models import Consulta, Exame, Paciente
+from pacientes.models import Paciente
+from core.models_consulta import Consulta
+from core.models_exames import Exame
 from api.autenticaçao.jwt import gerar_token
 #Login do adm 
 
@@ -39,7 +42,7 @@ def login_gestor(request):
 
             login(request, user)
 
-            response = redirect("dashbord")
+            response = redirect("gestao_clinica:dashbord")
 
             response.set_cookie(
             "access_token",
@@ -74,7 +77,7 @@ def logout_gestor(request):
      logout(request)
      return redirect("gestao_clinica:login_gestor")
 
-
+@login_required
 def criar_gestor(request):
     if not request.user.gestor.is_chefe:
         return HttpResponseForbidden("Acesso negado")
@@ -119,13 +122,13 @@ def criar_gestor(request):
             )
 
         except IntegrityError:
-            return render(request, "gestao_clinica/cadastrar_gestor.html", {
+            return render(request, "gestao_clinica/criar_gestor.html", {
                 "erro": "Não foi possível cadastrar o gestor."
             })
 
-        return redirect("gestao_clinica:lista_gestores")
+        return redirect("gestao_clinica:dashbord")
 
-    return render(request, "gestao_clinica/cadastrar_gestor.html")
+    return render(request, "gestao/criar_gestor.html")
 
 def excluir_gestor(request, gestor_id):
     if not request.user.is_authenticated:
@@ -141,50 +144,42 @@ def excluir_gestor(request, gestor_id):
         gestor.delete()
         user.delete()
 
-        return redirect("gestao_clinica:lista_gestores")
+        return redirect("gestao_clinica:dashbord")
 
-    return redirect("gestao_clinica:lista_gestores")
+    return render(request,"gestao/excluir_gestor.html")
 
 
 # ---------- DASHBOARD ----------
-
-@staff_member_required
+@login_required
 def dashboard(request):
-    
+
     agora = timezone.localtime()
     hoje = agora.date()
 
-    # ==========================================================
-    # PERÍODO DO DASHBOARD
-    # ==========================================================
-    # 5 dias anteriores + hoje + 4 dias futuros = 10 dias
+    # Período do dashboard
     data_inicial = hoje - timedelta(days=5)
     data_final = hoje + timedelta(days=4)
 
     consultas = (
         Consulta.objects
-        .filter(
-            data_consulta__date__range=(data_inicial, data_final)
-        )
+        .filter(data__range=(data_inicial, data_final))
         .select_related("paciente")
-        .order_by("data_consulta")
-    )
-    exames = (
-        Exame.objects
-        .filter(
-            data_exame__date__range=(data_inicial, data_final)
-        )
-        .select_related("paciente")
-        .order_by("data_exame")
+        .order_by("data")
     )
 
-    # ==========================================================
-    # ORGANIZAR OS REGISTROS POR DATA
-    # ==========================================================
-    consulta_de_hoje = Consulta.objects.filter(data_consulta=hoje).count()
-    exames_de_hoje = Exame.objects.filter(data_exame=hoje).count()
-    medicos = Medico.objects.count()
-    pacientes = Paciente.objects.count()
+    exames = (
+        Exame.objects
+        .filter(data__range=(data_inicial, data_final))
+        .select_related("paciente")
+        .order_by("data")
+    )
+
+    # Quantidades
+    consultas_de_hoje = Consulta.objects.filter(data=hoje).count()
+    exames_de_hoje = Exame.objects.filter(data=hoje).count()
+    total_medicos = Medico.objects.count()
+    total_pacientes = Paciente.objects.count()
+
     dias = []
 
     data_atual = data_inicial
@@ -194,13 +189,13 @@ def dashboard(request):
         consultas_do_dia = [
             consulta
             for consulta in consultas
-            if timezone.localtime(consulta.data_consulta).date() == data_atual
+            if timezone.localtime(consulta.data).date() == data_atual
         ]
 
         exames_do_dia = [
             exame
             for exame in exames
-            if timezone.localtime(exame.data_exame).date() == data_atual
+            if timezone.localtime(exame.data).date() == data_atual
         ]
 
         dias.append({
@@ -213,37 +208,45 @@ def dashboard(request):
 
         data_atual += timedelta(days=1)
 
-    # ==========================================================
-    # CONTEXTO
-    # ==========================================================
-
     context = {
         "dias": dias,
         "data_inicial": data_inicial,
         "data_final": data_final,
         "hoje": hoje,
-        'pacientes': pacientes,
-        'medicos': medicos,
-        'consultas_de_hoje' : consulta_de_hoje,
-        'exames_de_hoje' : exames_de_hoje
+
+        "pacientes": total_pacientes,
+        "medicos": total_medicos,
+
+        "consultas_de_hoje": consultas_de_hoje,
+        "exames_de_hoje": exames_de_hoje,
     }
-    
-    return render (request, 'gestao/dashbord.html', context)
 
-@staff_member_required
+    return render(
+        request,
+        "gestao/dashbord.html",
+        context
+    )
+
+@login_required
 def listar_medicos(request):
-    medicos = Medico.objects.select_related('user').all()
 
-    especialidade = request.GET.get('especialidade')
-    status = request.GET.get('status')  # 'ativo' ou 'inativo'
-    busca = request.GET.get('busca')
+    medicos = Medico.objects.select_related("user").all()
+
+    especialidade = request.GET.get("especialidade")
+    status = request.GET.get("status")
+    busca = request.GET.get("busca")
 
     if especialidade:
-        medicos = medicos.filter(especialidade=especialidade)
-    if status == 'ativo':
+        medicos = medicos.filter(
+            especialidade=especialidade
+        )
+
+    if status == "ativo":
         medicos = medicos.filter(ativo=True)
-    elif status == 'inativo':
+
+    elif status == "inativo":
         medicos = medicos.filter(ativo=False)
+
     if busca:
         medicos = medicos.filter(
             Q(user__first_name__icontains=busca) |
@@ -251,25 +254,31 @@ def listar_medicos(request):
             Q(crm__icontains=busca)
         )
 
-    medicos = medicos.order_by('user__first_name')
+    medicos = medicos.order_by("user__first_name")
 
     paginator = Paginator(medicos, 20)
-    page = request.GET.get('page')
+    page = request.GET.get("page")
     medicos_pag = paginator.get_page(page)
 
     context = {
-        'medicos': medicos_pag,
-        'especialidade_choices': Especialidade.choices,
-        'filtros': {
-            'especialidade': especialidade or '',
-            'status': status or '',
-            'busca': busca or '',
+        "medicos": medicos_pag,
+        "especialidade_choices": Especialidade.choices,
+        "filtros": {
+            "especialidade": especialidade or "",
+            "status": status or "",
+            "busca": busca or "",
         },
     }
-    return render(request, 'gestao/listar_medicos.html', context)
+
+    return render(
+        request,
+        "gestao/listar_medicos.html",
+        context
+    )
 
 
-@staff_member_required
+
+@login_required
 def criar_medico(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
@@ -309,13 +318,13 @@ def criar_medico(request):
         )
 
         messages.success(request, f'Médico {first_name} cadastrado com sucesso.')
-        return redirect('gestao/listar_medicos')
+        return redirect('gestao_clinica:listar_medicos')
 
     context = {'especialidade_choices': Especialidade.choices}
-    return render(request, 'gestao_clinica/form_medico.html', context)
+    return render(request, 'gestao/criar_medico.html', context)
 
 
-@staff_member_required
+@login_required
 def atualizar_medico(request, medico_id):
     medico = get_object_or_404(Medico.objects.select_related('user'), id=medico_id)
 
@@ -338,10 +347,29 @@ def atualizar_medico(request, medico_id):
         'medico': medico,
         'especialidade_choices': Especialidade.choices,
     }
-    return render(request, 'gestao_clinica/form_medico.html', context)
+    return render(request, 'gestao_clinica/listar_medicos.html', context)
+
+@login_required
+def excluir_medico(request, medico_id):
+    if not request.user.is_authenticated:
+        return redirect("gestao_clinica:login_gestor")
+
+    if not request.user.gestor.is_chefe:
+        return HttpResponseForbidden("Acesso negado.")
+
+    medico = get_object_or_404(Medico, id=medico_id)
+
+    if request.method == "POST":
+        user = medico.user
+        medico.delete()
+        user.delete()
+
+        return redirect("gestao_clinica:dashbord")
+
+    return redirect("gestao_clinica:listar_medicos")
 
 # MUDAR O CODIGO
-@staff_member_required
+@login_required
 def alternar_status_medico(request, medico_id):
     """
     Ativa/inativa o médico (soft delete) em vez de excluir de verdade,
@@ -360,22 +388,93 @@ def alternar_status_medico(request, medico_id):
     context = {'medico': medico}
     return render(request, 'gestao_clinica/confirmar_status_medico.html', context)
 
+@login_required
+def gerenciar_atendimentos(request, paciente_id):
+    paciente = get_object_or_404(Paciente, id=paciente_id)
 
+    consultas = Consulta.objects.filter(paciente=paciente)
+    exames = Exame.objects.filter(paciente=paciente)
 
+    if request.method == "POST":
+        tipo = request.POST.get("tipo")
+        atendimento_id = request.POST.get("atendimento_id")
+        novo_status = request.POST.get("status")
+
+        if tipo == "consulta":
+            consulta = get_object_or_404(
+                Consulta,
+                id=atendimento_id,
+                paciente=paciente
+            )
+
+            consulta.status = novo_status
+            consulta.save()
+
+            messages.success(
+                request,
+                "Status da consulta atualizado com sucesso."
+            )
+
+        elif tipo == "exame":
+            exame = get_object_or_404(
+                Exame,
+                id=atendimento_id,
+                paciente=paciente
+            )
+
+            exame.status = novo_status
+
+            data_conclusao = request.POST.get("data_conclusao")
+
+            if data_conclusao:
+                exame.data_conclusao = data_conclusao
+
+            exame.save()
+
+            messages.success(
+                request,
+                "Exame atualizado com sucesso."
+            )
+
+        return redirect(
+            "gerenciar_atendimentos",
+            paciente_id=paciente.id
+        )
+
+    return render(
+        request,
+        "core/gerenciar_atendimentos.html",
+        {
+            "paciente": paciente,
+            "consultas": consultas,
+            "exames": exames,
+            "hoje": date.today(),
+        }
+    )
 
 
 
 # ---------- CONFIGURAÇÃO DE VAGAS/TURNO ----------
+@login_required
+def registros(request, paciente_id):
+    paciente = get_object_or_404(Paciente, id=paciente_id)
+    consultas = Consulta.objects.filter(paciente=paciente).order_by('-data')
+    exames = Exame.objects.filter(paciente=paciente).order_by('-data')
 
-@staff_member_required
-def listar_configuracao_vagas(request):
+    context = {'consultas': consultas, 'exames': exames}
+    return render (request, 'gestao/registros.html', context)
+
+    
+
+@login_required
+def vagas_disponiveis(request):
     configuracoes = ConfiguracaoVagas.objects.all().order_by('especialidade', 'turno')
     context = {'configuracoes': configuracoes}
     return render(request, 'gestao/listar_configuracao_vagas.html', context)
 
 
-@staff_member_required
-def criar_configuracao_vagas(request):
+@login_required
+def criar_vagas(request):
     if request.method == 'POST':
         especialidade = request.POST.get('especialidade')
         turno = request.POST.get('turno')
@@ -404,8 +503,8 @@ def criar_configuracao_vagas(request):
     return render(request, 'gestao/form_configuracao_vagas.html', context)
 
 
-@staff_member_required
-def atualizar_configuracao_vagas(request, config_id):
+@login_required
+def atualizar_vagas_disponivies(request, config_id):
     configuracao = get_object_or_404(ConfiguracaoVagas, id=config_id)
 
     if request.method == 'POST':
@@ -424,8 +523,8 @@ def atualizar_configuracao_vagas(request, config_id):
     return render(request, 'gestao/form_configuracao_vagas.html', context)
 
 
-@staff_member_required
-def excluir_configuracao_vagas(request, config_id):
+@login_required
+def excluir_vagas_disponivies(request, config_id):
     configuracao = get_object_or_404(ConfiguracaoVagas, id=config_id)
 
     if request.method == 'POST':
@@ -436,4 +535,63 @@ def excluir_configuracao_vagas(request, config_id):
     context = {'configuracao': configuracao}
     return render(request, 'gestao/confirmar_exclusao.html', context)
 
+@login_required
+def listar_medicos(request):
 
+    medicos = Medico.objects.select_related("user").all()
+
+    context = {
+        "medicos": medicos,
+    }
+
+    return render(
+        request,
+        "gestao/listar_medico.html",
+        context
+    )
+
+
+@login_required
+def listar_gestores(request):
+
+    # Somente o gestor chefe pode visualizar os gestores
+    if not request.user.gestor.is_chefe:
+        return HttpResponseForbidden("Acesso negado.")
+
+    gestores = Gestor.objects.select_related("user").all()
+
+    context = {
+        "gestores": gestores,
+    }
+
+    return render(
+        request,
+        "gestao/listar_gestores.html",
+        context
+    )
+
+
+@login_required
+def detalhe_gestor(request, gestor_id):
+    gestor = get_object_or_404(Gestor, id=gestor_id)
+
+    return render(
+        request,
+        "gestao/detalhe_gestor.html",
+        {
+            "gestor": gestor,
+        }
+    )
+
+
+@login_required
+def detalhe_medico(request, medico_id):
+    medico = get_object_or_404(Medico, id=medico_id)
+
+    return render(
+        request,
+        "gestao/detalhe_medico.html",
+        {
+            "medico": medico,
+        }
+    )

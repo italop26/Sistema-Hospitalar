@@ -1,0 +1,129 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Configuração de Vagas
+{% endblock %}
+
+{% block titulo %}
+Configuração de Vagas
+{% endblock %}
+
+{% block subtitulo %}
+Gerencie a quantidade de vagas por especialidade e turno.
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <div>
+            <h2>Vagas configuradas</h2>
+
+            <p class="subtitulo" style="margin:5px 0 0;">
+                Controle a quantidade disponível para cada especialidade.
+            </p>
+        </div>
+
+        <a href="{% url 'gestao_clinica:criar_configuracao_vagas' %}"
+           class="botao-secundario botao-editar">
+
+            + Nova configuração
+
+        </a>
+
+    </div>
+
+
+    {% if configuracoes %}
+
+        <div class="lista-registros">
+
+            {% for configuracao in configuracoes %}
+
+                <div class="item-registro">
+
+                    <div class="info-registro">
+
+                        <span class="titulo-registro">
+
+                            {{ configuracao.especialidade }}
+
+                        </span>
+
+                        <span class="subtitulo-registro">
+
+                            Turno: {{ configuracao.turno }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:20px;
+                        flex-wrap:wrap;
+                    ">
+
+                        <div>
+
+                            <span class="rotulo-perfil">
+                                Vagas
+                            </span>
+
+                            <strong style="font-size:22px;">
+
+                                {{ configuracao.quantidade_vagas }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <a href="{% url 'gestao_:atualizar_configuracao_vagas' configuracao.id %}"
+                           class="botao-secundario botao-editar">
+
+                            Editar
+
+                        </a>
+
+
+                        <a href="{% url 'gestao:excluir_configuracao_vagas' configuracao.id %}"
+                           class="botao-secundario botao-excluir">
+
+                            Excluir
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="estado-vazio">
+
+            <h3>
+                Nenhuma configuração encontrada.
+            </h3>
+
+            <p style="margin-top:10px;">
+
+                Ainda não existem vagas configuradas.
+
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

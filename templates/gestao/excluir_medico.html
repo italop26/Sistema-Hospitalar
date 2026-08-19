@@ -51,15 +51,19 @@
         <div class="alerta alerta-aviso">
             Atenção: ao excluir este médico, o acesso dele ao sistema também será removido.
         </div>
-
-        <form method="POST" action="{% url 'gestao_clinica:excluir_medico'}">
+        {% for medico in medicos %}
+            <a href="{% url 'gestao_clinica:excluir_medico' medico.id %}">
+            Excluir
+        </a>
+        {% endfor %}
+       <!-- <form method="POST" action="{% url 'gestao_clinica:excluir_medico' medico.id %}"> --> 
             {% csrf_token %}
 
             <button type="submit" class="botao-excluir">
                 Confirmar exclusão
             </button>
 
-            <a href="{% url 'gestao_clinica:listar_medicos' %}"
+            <a href="{% url 'gestao_clinica:dashbord' %}"
                class="botao-secundario">
                 Cancelar
             </a>

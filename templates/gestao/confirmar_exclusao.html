@@ -1,0 +1,217 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+
+{% if configuracao %}
+    Atualizar Vagas
+{% else %}
+    Nova Configuração de Vagas
+{% endif %}
+
+{% endblock %}
+
+
+{% block titulo %}
+
+{% if configuracao %}
+    Atualizar Vagas
+{% else %}
+    Nova Configuração
+{% endif %}
+
+{% endblock %}
+
+
+{% block subtitulo %}
+
+Configure a quantidade de vagas por especialidade e turno.
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>
+
+            {% if configuracao %}
+                Editar configuração
+            {% else %}
+                Criar configuração
+            {% endif %}
+
+        </h2>
+
+    </div>
+
+
+    <form method="POST"
+          class="formulario-secao">
+
+        {% csrf_token %}
+
+
+        <div class="grade-campos">
+
+            <div class="campo">
+
+                <label for="especialidade">
+                    Especialidade
+                </label>
+
+                <select
+                    name="especialidade"
+                    id="especialidade"
+                    {% if configuracao %}disabled{% endif %}
+                    required
+                >
+
+                    <option value="">
+                        Selecione uma especialidade
+                    </option>
+
+
+                    {% for valor, nome in especialidade_choices %}
+
+                        <option
+                            value="{{ valor }}"
+                            {% if configuracao.especialidade == valor %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ nome }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                {% if configuracao %}
+
+                    <input
+                        type="hidden"
+                        name="especialidade"
+                        value="{{ configuracao.especialidade }}"
+                    >
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="turno">
+                    Turno
+                </label>
+
+                <select
+                    name="turno"
+                    id="turno"
+                    {% if configuracao %}disabled{% endif %}
+                    required
+                >
+
+                    <option value="">
+                        Selecione um turno
+                    </option>
+
+
+                    {% for valor, nome in turno_choices %}
+
+                        <option
+                            value="{{ valor }}"
+                            {% if configuracao.turno == valor %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ nome }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                {% if configuracao %}
+
+                    <input
+                        type="hidden"
+                        name="turno"
+                        value="{{ configuracao.turno }}"
+                    >
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="campo completo">
+
+                <label for="quantidade_vagas">
+                    Quantidade de vagas
+                </label>
+
+                <input
+                    type="number"
+                    name="quantidade_vagas"
+                    id="quantidade_vagas"
+                    min="0"
+                    value="{{ configuracao.quantidade_vagas|default:'' }}"
+                    required
+                >
+
+                <span class="dica">
+
+                    Informe quantas vagas estarão disponíveis
+                    para essa especialidade nesse turno.
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            display:flex;
+            gap:12px;
+            margin-top:10px;
+        ">
+
+            <button
+                type="submit"
+                class="botao-secundario botao-editar"
+            >
+
+                {% if configuracao %}
+                    Salvar alterações
+                {% else %}
+                    Criar configuração
+                {% endif %}
+
+            </button>
+
+
+            <a
+                href="{% url 'gestao:listar_configuracao_vagas' %}"
+                class="botao-secundario"
+            >
+
+                Cancelar
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

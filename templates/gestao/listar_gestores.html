@@ -1,0 +1,109 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Gestores
+{% endblock %}
+
+{% block titulo %}
+Gestores
+{% endblock %}
+
+{% block subtitulo %}
+Gerenciamento dos gestores do sistema
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>
+            Gestores cadastrados
+        </h2>
+
+        <a href="{% url 'gestao_clinica:criar_gestor' %}"
+           class="botao-primario"
+           style="width:auto;">
+
+            Novo Gestor
+
+        </a>
+
+    </div>
+
+    <table class="tabela">
+
+        <thead>
+
+            <tr>
+                <th>Nome</th>
+                <th>Usuário</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for gestor in gestores %}
+
+            <tr>
+
+                <td>
+                    {{ gestor.user.get_full_name }}
+                </td>
+
+                <td>
+                    {{ gestor.user.username }}
+                </td>
+
+                <td>
+
+                    {% if gestor.is_chefe %}
+
+                        <span class="status-badge status-concluido">
+                            Chefe
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-badge status-agendado">
+                            Gestor
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <a href="{% url 'gestao_clinica:detalhe_gestor' gestor.id %}"
+                       class="botao-secundario">
+                        Detalhes
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+
+                <td colspan="4">
+                    Nenhum gestor cadastrado.
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

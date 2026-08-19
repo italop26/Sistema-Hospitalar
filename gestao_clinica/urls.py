@@ -4,24 +4,135 @@ from . import views
 app_name = 'gestao_clinica'
 
 urlpatterns = [
-    path('', views.login_gestor, name='login_gestor'),
-    path('dashbord/', views.dashboard, name='dashbord'),
 
-    #Manipulação dos gestores
-    path('criar_gestor', views.criar_gestor, name='criar_gestor'),
-    path('excluir/<int:id_gestor>/', views.excluir_gestor, name='excluir_gestor'),
+    # =========================
+    # LOGIN / DASHBOARD
+    # =========================
 
-    #Atendimentos
-    path('atendimentos/', views.listar_atendimentos, name='listar_atendimentos'),
-    #Vagas 
-    path('vagas/', views.listar_configuracao_vagas, name='listar_configuracao_vagas'),
-    path('vagas/nova/', views.criar_configuracao_vagas, name='criar_configuracao_vagas'),
-    path('vagas/<int:config_id>/editar/', views.atualizar_configuracao_vagas, name='atualizar_configuracao_vagas'),
-    path('vagas/<int:config_id>/excluir/', views.excluir_configuracao_vagas, name='excluir_configuracao_vagas'),
+    path(
+        '',
+        views.login_gestor,
+        name='login_gestor'
+    ),
+    path(
+    "logout/",
+    views.logout_gestor,
+    name="logout_gestor"
+    ),
 
-    # gestao_clinica/urls.py (adicionar)
-    path('medicos/', views.listar_medicos, name='listar_medicos'),
-    path('medicos/novo/', views.criar_medico, name='criar_medico'),
-    path('medicos/<int:medico_id>/editar/', views.atualizar_medico, name='atualizar_medico'),
-    path('medicos/<int:medico_id>/status/', views.alternar_status_medico, name='alternar_status_medico'),
+    path(
+        'dashbord/',
+        views.dashboard,
+        name='dashbord'
+    ),
+
+
+    # =========================
+    # GESTORES
+    # =========================
+
+    path(
+        'gestores/criar/',
+        views.criar_gestor,
+        name='criar_gestor'
+    ),
+
+    path(
+        'gestores/<int:id_gestor>/excluir/',
+        views.excluir_gestor,
+        name='excluir_gestor'
+    ),
+
+
+    
+
+    # =========================
+    # MÉDICOS
+    # =========================
+
+    path(
+        'medicos/',
+        views.listar_medicos,
+        name='listar_medicos'
+    ),
+
+    path(
+        'medicos/novo/',
+        views.criar_medico,
+        name='criar_medico'
+    ),
+
+    path(
+        'medicos/<int:medico_id>/editar/',
+        views.atualizar_medico,
+        name='atualizar_medico'
+    ),
+
+    path(
+        'medicos/<int:medico_id>/deletar/',
+        views.excluir_medico,
+        name='excluir_medico'
+    ),
+
+    path(
+        'medicos/<int:medico_id>/status/',
+        views.alternar_status_medico,
+        name='alternar_status_medico'
+    ),
+    # =========================
+    # MÉDICOS
+    # =========================
+        path(
+        "pacientes/<int:paciente_id>/atendimentos/",
+        views.gerenciar_atendimentos,
+        name="gerenciar_atendimentos",
+    ),
+
+    path(
+        "pacientes/<int:paciente_id>/registros/",
+        views.registros,
+        name="registros",
+    ),
+
+    path(
+        "vagas/",
+        views.vagas_disponiveis,
+        name="listar_configuracao_vagas",
+    ),
+
+    path(
+        "vagas/criar/",
+        views.criar_vagas,
+        name="criar_configuracao_vagas",
+    ),
+
+    path(
+        "vagas/<int:config_id>/editar/",
+        views.atualizar_vagas_disponivies,
+        name="atualizar_configuracao_vagas",
+    ),
+
+    path(
+        "vagas/<int:config_id>/excluir/",
+        views.excluir_vagas_disponivies,
+        name="excluir_configuracao_vagas",
+    ),
+
+     # Médicos
+    path(
+        "medicos/",
+        views.listar_medicos,
+        name="listar_medicos"
+    ),
+
+    # Gestores
+    path(
+        "gestores/",
+        views.listar_gestores,
+        name="listar_gestores"
+    ),
+
+    #Detalhes
+    path('detalhe_gestor/<int:gestor_id>/', views.detalhe_gestor, name='detalhe_gestor'),
+    path('detalhe_medico/<int:medico_id>/', views.detalhe_medico, name='detalhe_medico')
 ]

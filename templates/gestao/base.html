@@ -1,28 +1,52 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Gestão Clínica{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    {% block css %}{% endblock %}
+    <title>
+        {% block title %}
+            Gestão Clínica
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet"
+          href="{% static 'styles/estilos.css' %}">
+
+    {% block css %}
+    {% endblock %}
+
 </head>
+
 <body>
 
 <div class="layout-principal">
 
-    <!-- SIDEBAR -->
+
+    <!-- =================================
+         SIDEBAR
+    ================================== -->
+
     <aside class="barra-lateral">
 
         <div>
 
             <div class="marca">
+
                 <div class="ponto"></div>
-                <span>Clínica</span>
+
+                <span>
+                    Clínica
+                </span>
+
             </div>
+
 
             <div class="navegacao">
 
@@ -30,49 +54,107 @@
                     Menu
                 </h3>
 
+
                 <nav class="menu-lateral">
-                    # Gestor
-                    <a href="{% url 'gestao:dashboard' %}" class="item-menu">
-                        <div class="icone-menu">🏠</div>
+
+
+                    <!-- DASHBOARD -->
+
+                    <a
+                        href="{% url 'gestao_clinica:dashbord' %}"
+                        class="item-menu"
+                    >
+
+                        <div class="icone-menu">
+                            🏠
+                        </div>
+
                         Dashboard
-                    </a>
 
-                    <a href="{% url 'gestao_clinica:criar_medico' %}" class="item-menu">
-                        <div class="icone-menu">👨‍⚕️</div>
-                        Cadastrar Médicos
-                    </a>
-
-                    <a href="{% url 'gestao_clinica:atulizar_gestor' %}" class="item-menu">
-                        <div class="icone-menu">👨‍⚕️</div>
-                        Atualizar Médicos
                     </a>
 
 
-                    <a href="{% url 'gestao_clinica:excluir_medico' %}" class="item-menu">
-                        <div class="icone-menu">👨‍⚕️</div>
-                        Excluir Médicos
+                    <!-- MÉDICOS -->
+
+                    <a
+                        href="{% url 'gestao_clinica:listar_medicos' %}"
+                        class="item-menu"
+                    >
+
+                        <div class="icone-menu">
+                            👨‍⚕️
+                        </div>
+
+                        Médicos
+
                     </a>
 
-                    <a href="{% url 'gestao_clinica:criar_gestor' %}" class="item-menu">
-                        <div class="icone-menu">👨‍⚕️</div>
-                        Cadastrar Gestor
-                    </a>
-                    
-                    <a href="{% url 'gestao_clinica:excluir_gestor' %}" class="item-menu">
-                        <div class="icone-menu">👨‍⚕️</div>
-                        Excluir Gestor
-                    </a>
+
+                    <!-- SOMENTE CHEFE -->
+
+                    {% if request.user.gestor.is_chefe %}
 
 
+                        <a
+                            href="{% url 'gestao_clinica:criar_medico' %}"
+                            class="item-menu"
+                        >
+
+                            <div class="icone-menu">
+                                ➕
+                            </div>
+
+                            Cadastrar Médico
+
+                        </a>
 
 
+                        <a
+                            href="{% url 'gestao_clinica:criar_gestor' %}"
+                            class="item-menu"
+                        >
+
+                            <div class="icone-menu">
+                                👤
+                            </div>
+
+                            Cadastrar Gestor
+
+                        </a>
 
 
+                        <a
+                            href="{% url 'gestao_clinica:listar_gestores' %}"
+                            class="item-menu"
+                        >
 
-                    <a href="{% url 'gestao:listar_configuracao_vagas' %}" class="item-menu">
-                        <div class="icone-menu">⚙️</div>
+                            <div class="icone-menu">
+                                👥
+                            </div>
+
+                            Gestores
+
+                        </a>
+
+
+                    {% endif %}
+
+
+                    <!-- VAGAS -->
+
+                    <a
+                        href="{% url 'gestao_clinica:listar_configuracao_vagas' %}"
+                        class="item-menu"
+                    >
+
+                        <div class="icone-menu">
+                            ⚙️
+                        </div>
+
                         Configuração de Vagas
+
                     </a>
+
 
                 </nav>
 
@@ -80,55 +162,99 @@
 
         </div>
 
-        <a href="#" class="item-menu item-sair">
-            <div class="icone-menu">🚪</div>
+
+        <!-- SAIR -->
+
+        <a
+            href="{% url 'gestao_clinica:logout_gestor' %}"
+            class="item-menu item-sair"
+        >
+
+            <div class="icone-menu">
+                🚪
+            </div>
+
             Sair
+
         </a>
 
     </aside>
 
-    <!-- CONTEÚDO -->
+
+
+    <!-- =================================
+         CONTEÚDO
+    ================================== -->
+
     <main class="conteudo-principal">
 
+
         <header class="cabecalho-principal">
+
 
             <div>
 
                 <h1>
+
                     {% block titulo %}
-                    Gestão Clínica
+                        Gestão Clínica
                     {% endblock %}
+
                 </h1>
 
+
                 <p class="subtitulo">
+
                     {% block subtitulo %}
-                    Painel administrativo
+                        Painel administrativo
                     {% endblock %}
+
                 </p>
 
             </div>
 
+
+
+            <!-- USUÁRIO -->
+
             <div class="cartao-usuario">
 
+
                 <div class="avatar-usuario">
+
                     {{ request.user.first_name|first|upper }}
+
                 </div>
+
 
                 <div class="dados-usuario">
 
+
                     <span class="nome-usuario">
+
                         {{ request.user.get_full_name }}
+
                     </span>
 
+
                     <span class="cpf-usuario">
+
                         {{ request.user.username }}
+
                     </span>
+
 
                 </div>
 
             </div>
 
         </header>
+
+
+
+        <!-- =================================
+             MENSAGENS
+        ================================== -->
 
         {% if messages %}
 
@@ -144,65 +270,32 @@
 
         {% endif %}
 
+
+
+        <!-- =================================
+             CONTEÚDO DA PÁGINA
+        ================================== -->
+
         {% block content %}
         {% endblock %}
 
+
+
         <footer class="rodape">
+
             Sistema de Gestão Clínica
+
         </footer>
-
-<div class="resumo-dashboard">
-
-    <div class="card-resumo">
-        <div class="icone-resumo">📅</div>
-
-        <div class="info-resumo">
-            <span class="titulo-resumo">Consultas hoje</span>
-            <span class="numero-resumo">
-                {{ consultas_de_hoje }}
-            </span>
-        </div>
-    </div>
-
-
-    <div class="card-resumo">
-        <div class="icone-resumo">🧪</div>
-
-        <div class="info-resumo">
-            <span class="titulo-resumo">Exames hoje</span>
-            <span class="numero-resumo">
-                {{ exames_de_hoje }}
-            </span>
-        </div>
-    </div>
-
-{% if request.user.gestor.is_chefe %}
-    <div class="card-resumo">
-        <div class="icone-resumo">👨‍⚕️</div>
-
-        <div class="info-resumo">
-            <span class="titulo-resumo">Médicos cadastrados</span>
-            <span class="numero-resumo">
-                {{ medicos }}
-            #Criar um botao para a url do medico e pacientes
-            </span>
-        </div>
-        <div class="info-resumo">
-            <span class="titulo-resumo">Pacientes cadastrados</span>
-            <span class="numero-resumo">
-                {{ pacientes }}
-            
-            </span>
-        </div>
-{% endif %}
-    </div>
 
     </main>
 
 </div>
 
+
+
 {% block js %}
 {% endblock %}
 
 </body>
+
 </html>

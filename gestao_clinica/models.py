@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from gestao_clinica.choices import Status
 from gestao_clinica.especialidades import Especialidade
 from gestao_clinica.turnos import Turno
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
 
@@ -31,7 +32,10 @@ class ConfiguracaoVagas(models.Model):
     medico = models.ForeignKey('gestao_clinica.Medico', on_delete=models.CASCADE)
     especialidade = models.CharField(max_length=20, choices=Especialidade.choices)
     turno = models.CharField(max_length=20, choices=Turno.choices)
-    quantidade_vagas = models.PositiveIntegerField()# Mexe aqui ainda 
+    quantidade_vagas = models.PositiveIntegerField(validators=[
+        MinValueValidator(0),
+        MaxValueValidator(50)
+    ])
 
     class Meta:
         unique_together = ("especialidade", "turno")

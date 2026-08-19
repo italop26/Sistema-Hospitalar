@@ -1,0 +1,309 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Gerenciar Atendimentos
+{% endblock %}
+
+{% block titulo %}
+Gerenciar Atendimentos
+{% endblock %}
+
+{% block subtitulo %}
+Gerenciamento das consultas e exames do paciente
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <div>
+            <h2>
+                {{ paciente.user.get_full_name }}
+            </h2>
+
+            <p class="subtitulo" style="margin:5px 0 0;">
+                Consultas e exames
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CONSULTAS
+    ========================== -->
+
+    <div style="margin-bottom:40px;">
+
+        <h2 style="margin-bottom:20px;">
+            📅 Consultas
+        </h2>
+
+
+        {% if consultas %}
+
+            <div class="lista-registros">
+
+                {% for consulta in consultas %}
+
+                    <div class="item-registro">
+
+                        <div class="info-registro">
+
+                            <span class="titulo-registro">
+                                {{ consulta.especialidade }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                {{ consulta.data }}
+                            </span>
+
+                        </div>
+
+
+                        <div style="
+                            display:flex;
+                            align-items:center;
+                            gap:15px;
+                            flex-wrap:wrap;
+                        ">
+
+                            <span class="status-badge
+                                {% if consulta.status == 'concluido' %}
+                                    status-concluido
+                                {% elif consulta.status == 'cancelado' %}
+                                    status-cancelado
+                                {% else %}
+                                    status-agendado
+                                {% endif %}
+                            ">
+
+                                {{ consulta.status }}
+
+                            </span>
+
+
+                            <form method="POST"
+                                  style="
+                                    display:flex;
+                                    gap:10px;
+                                    align-items:center;
+                                  ">
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="tipo"
+                                    value="consulta"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="atendimento_id"
+                                    value="{{ consulta.id }}"
+                                >
+
+
+                                <select
+                                    name="status"
+                                    style="width:auto;"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Alterar status
+                                    </option>
+
+                                    <option value="agendado">
+                                        Agendado
+                                    </option>
+
+                                    <option value="concluido">
+                                        Concluído
+                                    </option>
+
+                                    <option value="cancelado">
+                                        Cancelado
+                                    </option>
+
+                                </select>
+
+
+                                <button
+                                    type="submit"
+                                    class="botao-secundario botao-editar"
+                                >
+
+                                    Salvar
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="estado-vazio">
+
+                Nenhuma consulta encontrada.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         EXAMES
+    ========================== -->
+
+    <div>
+
+        <h2 style="margin-bottom:20px;">
+            🧪 Exames
+        </h2>
+
+
+        {% if exames %}
+
+            <div class="lista-registros">
+
+                {% for exame in exames %}
+
+                    <div class="item-registro">
+
+                        <div class="info-registro">
+
+                            <span class="titulo-registro">
+                                {{ exame.especialidade }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                {{ exame.data }}
+                            </span>
+
+                        </div>
+
+
+                        <div style="
+                            display:flex;
+                            align-items:center;
+                            gap:15px;
+                            flex-wrap:wrap;
+                        ">
+
+                            <span class="status-badge
+                                {% if exame.status == 'concluido' %}
+                                    status-concluido
+                                {% elif exame.status == 'cancelado' %}
+                                    status-cancelado
+                                {% else %}
+                                    status-agendado
+                                {% endif %}
+                            ">
+
+                                {{ exame.status }}
+
+                            </span>
+
+
+                            <form method="POST"
+                                  style="
+                                    display:flex;
+                                    gap:10px;
+                                    align-items:center;
+                                    flex-wrap:wrap;
+                                  ">
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="tipo"
+                                    value="exame"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="atendimento_id"
+                                    value="{{ exame.id }}"
+                                >
+
+
+                                <select
+                                    name="status"
+                                    style="width:auto;"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Alterar status
+                                    </option>
+
+                                    <option value="agendado">
+                                        Agendado
+                                    </option>
+
+                                    <option value="concluido">
+                                        Concluído
+                                    </option>
+
+                                    <option value="cancelado">
+                                        Cancelado
+                                    </option>
+
+                                </select>
+
+
+                                <input
+                                    type="date"
+                                    name="data_conclusao"
+                                    value="{{ exame.data_conclusao|date:'Y-m-d' }}"
+                                >
+
+
+                                <button
+                                    type="submit"
+                                    class="botao-secundario botao-editar"
+                                >
+
+                                    Salvar
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="estado-vazio">
+
+                Nenhum exame encontrado.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

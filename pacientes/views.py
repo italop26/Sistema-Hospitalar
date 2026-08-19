@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Paciente, Consulta, Exame
+from .models import Paciente
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
+from core.models_exames import Exame
+from core.models_consulta import Consulta
 
 
 

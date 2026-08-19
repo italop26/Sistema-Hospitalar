@@ -12,7 +12,7 @@ Dashboard
 Visão geral da clínica
 {% endblock %}
 
-{% block content %}
+
 
 
 
@@ -112,9 +112,14 @@ Visão geral da clínica
                         Médicos
                     </span>
 
-                    <h2>
-                        {{ medicos }}
-                    </h2>
+                    <div>
+                        <h2>{{ medicos }}</h2>
+                        <p>Médicos cadastrados</p>
+
+                        <a href="{% url 'gestao_clinica:listar_medicos' %}">
+                         Ver detalhes
+                        </a>
+                    </div>
 
                 </div>
 
@@ -408,7 +413,7 @@ Visão geral da clínica
                                             Consulta •
                                             {{ consulta.especialidade }}
                                             •
-                                            {{ consulta.data_consulta|date:"H:i" }}
+                                            {{ consulta.data|date:"H:i" }}
 
                                         </span>
 
@@ -464,7 +469,7 @@ Visão geral da clínica
                                             Exame •
                                             {{ exame.tipo_exame }}
                                             •
-                                            {{ exame.data_exame|date:"H:i" }}
+                                            {{ exame.data|date:"H:i" }}
 
                                         </span>
 

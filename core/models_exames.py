@@ -11,5 +11,6 @@ class Exame(models.Model):
         choices=Status.choices,
         default=Status.AGENDADO
     )
+    data_conclusao = models.DateTimeField(null=True, blank=True)
     def __str__(self):
-        return f"Exame de {self.paciente.nome} em {self.data_exame}"
+        return f"Exame de {self.paciente.nome} em {self.data}"

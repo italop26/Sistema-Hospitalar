@@ -2,22 +2,38 @@
 
 {% block title %}Médicos{% endblock %}
 
+{% block titulo %}
+Médicos
+{% endblock %}
+
+{% block subtitulo %}
+Gerenciamento dos médicos cadastrados
+{% endblock %}
+
 {% block content %}
 
 <div class="secao">
 
     <div class="cabecalho-secao">
 
-        <h2>Médicos</h2>
+        <div>
 
-        <a href="{% url 'gestao_clinica:cadastrar_medico' %}"
-           class="botao-primario">
+            <h2>
+                Médicos cadastrados
+            </h2>
+
+        </div>
+
+        <a href="{% url 'gestao_clinica:criar_medico' %}"
+           class="botao-primario"
+           style="width:auto;">
 
             Novo Médico
 
         </a>
 
     </div>
+
 
     <table class="tabela">
 
@@ -26,14 +42,19 @@
             <tr>
 
                 <th>Nome</th>
+
                 <th>CRM</th>
+
                 <th>Especialidade</th>
+
                 <th>Status</th>
+
                 <th>Ações</th>
 
             </tr>
 
         </thead>
+
 
         <tbody>
 
@@ -47,11 +68,13 @@
 
                 </td>
 
+
                 <td>
 
                     {{ medico.crm }}
 
                 </td>
+
 
                 <td>
 
@@ -59,34 +82,33 @@
 
                 </td>
 
+
                 <td>
 
                     {% if medico.ativo %}
 
-                        Ativo
+                        <span class="status-badge status-concluido">
+                            Ativo
+                        </span>
 
                     {% else %}
 
-                        Inativo
+                        <span class="status-badge status-cancelado">
+                            Inativo
+                        </span>
 
                     {% endif %}
 
                 </td>
 
+
                 <td>
 
-                    <a href="{% url 'gestao_clinica:editar_medico' medico.id %}">
-                        Editar
-                    </a>
+                    <a href="{% url 'gestao_clinica:detalhe_medico' medico.id %}"
+                       class="botao-secundario">
 
-                    |
+                        Detalhes
 
-                    <a href="{% url 'gestao_clinica:alterar_status_medico' medico.id %}">
-                        {% if medico.ativo %}
-                            Inativar
-                        {% else %}
-                            Ativar
-                        {% endif %}
                     </a>
 
                 </td>
@@ -110,6 +132,45 @@
         </tbody>
 
     </table>
+
+
+    {% if medicos.has_other_pages %}
+
+    <div class="paginacao">
+
+        {% if medicos.has_previous %}
+
+            <a href="?page={{ medicos.previous_page_number }}"
+               class="pagina-item">
+
+                ‹
+
+            </a>
+
+        {% endif %}
+
+
+        <span class="pagina-item ativa">
+
+            {{ medicos.number }}
+
+        </span>
+
+
+        {% if medicos.has_next %}
+
+            <a href="?page={{ medicos.next_page_number }}"
+               class="pagina-item">
+
+                ›
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
 
 </div>
 

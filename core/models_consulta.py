@@ -12,7 +12,7 @@ class Consulta(models.Model):
         default=Status.AGENDADO
     )
     def __str__(self):
-        return f"Consulta de {self.paciente.nome} em {self.data_consulta}"
+        return f"Consulta de {self.paciente.nome} em {self.data}"
 
 
 

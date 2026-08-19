@@ -56,14 +56,14 @@
             Atenção: ao excluir este gestor, o acesso dele ao sistema também será removido.
         </div>
 
-        <form method="POST" action="{% url 'gestao_clinica:excluir_gestor'}">
+        <form method="POST" action="{% url 'gestao_clinica:excluir_gestor' gestor.id}">
             {% csrf_token %}
 
             <button type="submit" class="botao-excluir">
                 Confirmar exclusão
             </button>
 
-            <a href="{% url 'gestao_clinica:lista_gestores' %}"
+            <a href="{% url 'gestao_clinica:dashbord' %}"
                class="botao-secundario">
                 Cancelar
             </a>

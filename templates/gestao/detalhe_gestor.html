@@ -1,0 +1,143 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Detalhes do Gestor
+{% endblock %}
+
+{% block titulo %}
+Detalhes do Gestor
+{% endblock %}
+
+{% block subtitulo %}
+Informações do gestor
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>
+            {{ gestor.user.get_full_name }}
+        </h2>
+
+        {% if gestor.is_chefe %}
+
+            <span class="status-badge status-concluido">
+                Gestor Chefe
+            </span>
+
+        {% else %}
+
+            <span class="status-badge status-agendado">
+                Gestor
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="grade-perfil">
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Nome
+            </span>
+
+            <span class="valor-perfil">
+                {{ gestor.user.get_full_name }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Username
+            </span>
+
+            <span class="valor-perfil">
+                {{ gestor.user.username }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                E-mail
+            </span>
+
+            <span class="valor-perfil">
+                {{ gestor.user.email }}
+            </span>
+
+        </div>
+
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Função
+            </span>
+
+            <span class="valor-perfil">
+
+                {% if gestor.is_chefe %}
+                    Gestor Chefe
+                {% else %}
+                    Gestor
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div style="display:flex; gap:12px; margin-top:30px;">
+        {% for gestor in gestores %}
+        <a href="{% url 'gestao_clinica:editar_gestor' gestor.id %}"
+           class="botao-secundario botao-editar">
+
+
+            Atualizar Gestor
+        {% endfor %}
+        </a>
+
+        
+        <form method="POST"
+              action="{% url 'gestao_clinica:excluir_gestor' gestor.id %}"
+              style="display:inline;">
+
+            {% csrf_token %}
+
+            <button type="submit"
+                    class="botao-secundario botao-excluir"
+                    onclick="return confirm('Tem certeza que deseja excluir este gestor?');">
+
+                Excluir Gestor
+
+            </button>
+
+        </form>
+
+
+        <a href="{% url 'gestao_clinica:listar_gestores' %}"
+           class="botao-secundario">
+
+            Voltar
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

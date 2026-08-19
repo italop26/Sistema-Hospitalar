@@ -1,0 +1,155 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}
+Registros
+{% endblock %}
+
+{% block titulo %}
+Registros do Paciente
+{% endblock %}
+
+{% block subtitulo %}
+Histórico de consultas e exames
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>
+            Histórico
+        </h2>
+
+    </div>
+
+
+    <!-- CONSULTAS -->
+
+    <div style="margin-bottom:40px;">
+
+        <h2 style="margin-bottom:20px;">
+            📅 Consultas
+        </h2>
+
+
+        {% if consultas %}
+
+            <div class="lista-registros">
+
+                {% for consulta in consultas %}
+
+                    <div class="item-registro">
+
+                        <div class="info-registro">
+
+                            <span class="titulo-registro">
+                                {{ consulta.especialidade }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                {{ consulta.data }}
+                            </span>
+
+                        </div>
+
+
+                        <span class="status-badge
+                            {% if consulta.status == 'concluido' %}
+                                status-concluido
+                            {% elif consulta.status == 'cancelado' %}
+                                status-cancelado
+                            {% else %}
+                                status-agendado
+                            {% endif %}
+                        ">
+
+                            {{ consulta.status }}
+
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="estado-vazio">
+
+                Nenhuma consulta registrada.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- EXAMES -->
+
+    <div>
+
+        <h2 style="margin-bottom:20px;">
+            🧪 Exames
+        </h2>
+
+
+        {% if exames %}
+
+            <div class="lista-registros">
+
+                {% for exame in exames %}
+
+                    <div class="item-registro">
+
+                        <div class="info-registro">
+
+                            <span class="titulo-registro">
+                                {{ exame.especialidade }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                {{ exame.data }}
+                            </span>
+
+                        </div>
+
+
+                        <span class="status-badge
+                            {% if exame.status == 'concluido' %}
+                                status-concluido
+                            {% elif exame.status == 'cancelado' %}
+                                status-cancelado
+                            {% else %}
+                                status-agendado
+                            {% endif %}
+                        ">
+
+                            {{ exame.status }}
+
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="estado-vazio">
+
+                Nenhum exame registrado.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
