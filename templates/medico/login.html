@@ -1,0 +1,143 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login Médico</title>
+
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <div class="painel-marca">
+
+        <div>
+
+            <div class="marca">
+                <span class="ponto"></span>
+                Sistema Hospitalar
+            </div>
+
+            <div class="texto-marca">
+
+                <div>
+                    <h1>Área Médica</h1>
+
+                    <p>
+                        Acesse seu painel para acompanhar
+                        os atendimentos programados para hoje.
+                    </p>
+                </div>
+
+                <div class="lista-etapas">
+
+                    <div class="etapa concluida">
+                        <span class="marca-etapa">1</span>
+                        <span class="rotulo-etapa">Acesso seguro</span>
+                    </div>
+
+                    <div class="etapa">
+                        <span class="marca-etapa">2</span>
+                        <span class="rotulo-etapa">Atendimentos do dia</span>
+                    </div>
+
+                    <div class="etapa">
+                        <span class="marca-etapa">3</span>
+                        <span class="rotulo-etapa">Registro médico</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="rodape-marca">
+            Sistema Hospitalar
+        </div>
+
+    </div>
+
+
+    <div class="painel-formulario">
+
+        <div class="cartao">
+
+            <span class="rotulo">Área médica</span>
+
+            <h1>Entrar</h1>
+
+            <p class="subtitulo">
+                Acesse utilizando seu CRM e sua senha.
+            </p>
+
+
+            {% if erro %}
+                <div class="alerta alerta-erro">
+                    {{ erro }}
+                </div>
+            {% endif %}
+
+
+            <form method="POST" action="{% url 'medico:login_medico' %}">
+
+                {% csrf_token %}
+
+                <div class="campo">
+
+                    <label for="crm">CRM</label>
+
+                    <input
+                        type="text"
+                        id="crm"
+                        name="crm"
+                        placeholder="Digite seu CRM"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="senha">Senha</label>
+
+                    <div class="caixa-entrada">
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Digite sua senha"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="botao-primario"
+                >
+                    Entrar
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```

@@ -1,0 +1,84 @@
+{% extends "gestao/base.html" %}
+
+{% block title %}
+Alterar Status
+{% endblock %}
+
+{% block titulo %}
+Alterar Status
+{% endblock %}
+
+{% block subtitulo %}
+Atualize o status do registro.
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+```
+<div class="cabecalho-secao">
+    <h2>Alterar status</h2>
+</div>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <div class="grade-campos">
+
+        <div class="campo">
+
+            <label for="status">
+                Status
+            </label>
+
+            <select
+                id="status"
+                name="status"
+                required
+            >
+
+                <option value="">
+                    Selecione um status
+                </option>
+
+                {% for valor, nome in status_choices %}
+
+                    <option
+                        value="{{ valor }}"
+                        {% if registro.status == valor %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ nome }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <button
+        type="submit"
+        class="botao-primario"
+    >
+        Atualizar status
+    </button>
+
+    <a
+        href="{% url 'gestao_clinica:registros' %}"
+        class="botao-secundario"
+    >
+        Cancelar
+    </a>
+
+</form>
+```
+
+</div>
+
+{% endblock %}

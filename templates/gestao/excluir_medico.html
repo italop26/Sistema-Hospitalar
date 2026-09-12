@@ -5,67 +5,162 @@
 <div class="conteudo-principal">
 
     <div class="cabecalho-principal">
+
         <div>
-            <span class="rotulo">Gestão</span>
-            <h1>Excluir médico</h1>
+
+            <span class="rotulo">
+                Gestão
+            </span>
+
+            <h1>
+                Excluir médico
+            </h1>
+
             <p class="subtitulo">
                 Confirme a exclusão do médico selecionado.
             </p>
+
         </div>
+
     </div>
+
 
     <section class="secao">
 
         <div class="cabecalho-secao">
+
             <div>
-                <h2>Dados do médico</h2>
+
+                <h2>
+                    Dados do médico
+                </h2>
+
             </div>
+
         </div>
+
 
         <div class="grade-perfil">
 
-            <div class="item-perfil">
-                <span class="rotulo-perfil">Tipo de usuário</span>
-                <span class="valor-perfil">Médico</span>
-            </div>
+
+            <!-- TIPO -->
 
             <div class="item-perfil">
-                <span class="rotulo-perfil">Nome</span>
-                <span class="valor-perfil">
-                    {{ medico.user.first_name }} {{ medico.user.last_name }}
+
+                <span class="rotulo-perfil">
+                    Tipo de usuário
                 </span>
+
+                <span class="valor-perfil">
+                    Médico
+                </span>
+
             </div>
 
-            <div class="item-perfil">
-                <span class="rotulo-perfil">CRM</span>
-                <span class="valor-perfil">{{ medico.crm }}</span>
-            </div>
+
+            <!-- NOME -->
 
             <div class="item-perfil">
-                <span class="rotulo-perfil">CPF</span>
-                <span class="valor-perfil">{{ medico.cpf }}</span>
+
+                <span class="rotulo-perfil">
+                    Nome
+                </span>
+
+                <span class="valor-perfil">
+                    {{ medico.nome }}
+                </span>
+
+            </div>
+
+
+            <!-- CRM -->
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                    CRM
+                </span>
+
+                <span class="valor-perfil">
+                    {{ medico.crm }}
+                </span>
+
+            </div>
+
+
+            <!-- CPF -->
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                    CPF
+                </span>
+
+                <span class="valor-perfil">
+                    {{ medico.cpf }}
+                </span>
+
+            </div>
+
+
+            <!-- ESPECIALIDADE -->
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                    Especialidade
+                </span>
+
+                <span class="valor-perfil">
+                    {{ medico.get_especialidade_display }}
+                </span>
+
             </div>
 
         </div>
+
+
+        <!-- AVISO -->
 
         <div class="alerta alerta-aviso">
-            Atenção: ao excluir este médico, o acesso dele ao sistema também será removido.
+
+            <strong>Atenção:</strong>
+
+            ao excluir este médico, o acesso dele ao sistema também será removido.
+
+            Os dados relacionados ao médico também poderão ser afetados
+            conforme as regras definidas nos modelos.
+
         </div>
-        {% for medico in medicos %}
-            <a href="{% url 'gestao_clinica:excluir_medico' medico.id %}">
-            Excluir
-        </a>
-        {% endfor %}
-       <!-- <form method="POST" action="{% url 'gestao_clinica:excluir_medico' medico.id %}"> --> 
+
+
+        <!-- CONFIRMAÇÃO -->
+
+        <form
+            method="POST"
+            action="{% url 'gestao_clinica:excluir_medico' medico.id %}"
+        >
+
             {% csrf_token %}
 
-            <button type="submit" class="botao-excluir">
+
+            <button
+                type="submit"
+                class="botao-excluir"
+            >
+
                 Confirmar exclusão
+
             </button>
 
-            <a href="{% url 'gestao_clinica:dashbord' %}"
-               class="botao-secundario">
+
+            <a
+                href="{% url 'gestao_clinica:listar_medicos' %}"
+                class="botao-secundario"
+            >
+
                 Cancelar
+
             </a>
 
         </form>

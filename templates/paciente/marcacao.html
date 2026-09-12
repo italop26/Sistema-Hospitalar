@@ -1,159 +1,556 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agendar consulta | MedAgenda — Central de Exames</title>
-<link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Agendamento | MedAgenda</title>
+
+    <link rel="stylesheet"
+          href="{% static 'static/styles/estilos.css' %}">
+
 </head>
+
+
 <body>
-  <!-- BARRA LATERAL: navegação entre páginas -->
-  <aside class="barra-lateral">
-    <div class="marca">
-      <span class="ponto"></span>
-      <span>MedAgenda</span>
-    </div>
 
-    <nav class="menu-lateral">
-      <a href="#" class="item-menu ativo">
-        <span class="icone-menu">1</span>
-        <span class="texto-menu">Marcação</span>
-      </a>
-      <a href="#" class="item-menu">
-        <span class="icone-menu">2</span>
-        <span class="texto-menu">Meus Exames</span>
-      </a>
-      <a href="#" class="item-menu">
-        <span class="icone-menu">3</span>
-        <span class="texto-menu">Resultados</span>
-      </a>
-      <a href="#" class="item-menu">
-        <span class="icone-menu">4</span>
-        <span class="texto-menu">Perfil</span>
-      </a>
-    </nav>
+    <!-- =================================================
+         BARRA LATERAL
+    ================================================== -->
 
-    <a href="#" class="item-menu item-sair">
-      <span class="icone-menu">⏻</span>
-      <span class="texto-menu">Sair</span>
-    </a>
-  </aside>
+    <aside class="barra-lateral">
 
- <header class="cabecalho-principal">
-  <div class="saudacao">
-    <p class="rotulo">Agendamento</p>
+        <div class="marca">
 
-    {% if tipo == "consulta" %}
-      <h1>Agendar Consulta</h1>
-    {% else %}
-      <h1>Agendar Exame</h1>
-    {% endif %}
+            <span class="ponto"></span>
 
-  </div>
-</header>
+            <span>MedAgenda</span>
 
-<section class="secao">
+        </div>
 
-  <div class="cabecalho-secao">
-    <div class="abas-marcacao">
-        <a href="?tipo=consulta"
-           class="aba {% if tipo == 'consulta' %}ativa{% endif %}">
-            Consulta
+
+        <nav class="menu-lateral">
+
+            <a href="{% url 'marcacao' %}"
+               class="item-menu ativo">
+
+                <span class="icone-menu">1</span>
+
+                <span class="texto-menu">
+                    Marcação
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="item-menu">
+
+                <span class="icone-menu">2</span>
+
+                <span class="texto-menu">
+                    Meus Exames
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="item-menu">
+
+                <span class="icone-menu">3</span>
+
+                <span class="texto-menu">
+                    Resultados
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="item-menu">
+
+                <span class="icone-menu">4</span>
+
+                <span class="texto-menu">
+                    Perfil
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <a href="#"
+           class="item-menu item-sair">
+
+            <span class="icone-menu">⏻</span>
+
+            <span class="texto-menu">
+                Sair
+            </span>
+
         </a>
 
-        <a href="?tipo=exame"
-           class="aba {% if tipo == 'exame' %}ativa{% endif %}">
-            Exame
-        </a>
-    </div>
-  </div>
+    </aside>
 
-  <form method="POST" action="{% url 'marcacao' %}" class="formulario-secao">
+
+    <!-- =================================================
+         CONTEÚDO PRINCIPAL
+    ================================================== -->
+
+    <main class="conteudo-principal">
+
+
+        <!-- =================================================
+             CABEÇALHO
+        ================================================== -->
+
+        <header class="cabecalho-principal">
+
+            <div class="saudacao">
+
+                <p class="rotulo">
+                    Agendamento
+                </p>
+
+
+                {% if tipo == "consulta" %}
+
+                    <h1>
+                        Agendar Consulta
+                    </h1>
+
+                    <p class="subtitulo">
+                        Escolha a data, especialidade e turno.
+                    </p>
+
+                {% else %}
+
+                    <h1>
+                        Agendar Exame
+                    </h1>
+
+                    <p class="subtitulo">
+                        Escolha a data, exame, especialidade e turno.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             MENSAGENS
+        ================================================== -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alerta alerta-{{ message.tags }}">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- =================================================
+             SEÇÃO
+        ================================================== -->
+
+        <section class="secao">
+
+
+            <!-- =================================================
+                 ABAS
+            ================================================== -->
+
+            <div class="cabecalho-secao">
+
+                <div class="abas-marcacao">
+
+                    <a href="?tipo=consulta"
+                       class="aba {% if tipo == 'consulta' %}ativa{% endif %}">
+
+                        Consulta
+
+                    </a>
+
+
+                    <a href="?tipo=exame"
+                       class="aba {% if tipo == 'exame' %}ativa{% endif %}">
+
+                        Exame
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORMULÁRIO
+            ================================================== -->
+
+           <form method="POST"
+      action="{% url 'marcacao' %}"
+      class="formulario-secao">
+
     {% csrf_token %}
 
-    <input type="hidden" name="tipo" value="{{ tipo }}">
+    <input
+        type="hidden"
+        name="tipo"
+        value="{{ tipo }}"
+    >
 
     <div class="grade-campos">
 
-      {% if tipo == "consulta" %}
+        {% if tipo == "consulta" %}
 
-      <div class="campo">
-        <label for="especialidade">Especialidade</label>
-        <div class="caixa-entrada">
-          <select id="especialidade" name="especialidade" required>
-            <option value="" disabled selected>Selecione a especialidade</option>
-            <option value="Clínico Geral">Clínico Geral</option>
-            <option value="Cardiologia">Cardiologia</option>
-            <option value="Dermatologia">Dermatologia</option>
-            <option value="Ortopedia">Ortopedia</option>
-            <option value="Pediatria">Pediatria</option>
-            <option value="Ginecologia">Ginecologia</option>
-          </select>
-        </div>
-      </div>
+            <!-- DATA -->
 
-      <div class="campo">
-        <label for="data_consulta">Data da consulta</label>
-        <div class="caixa-entrada">
-          <input type="datetime-local" id="data_consulta" name="data_consulta" required>
-        </div>
-      </div>
+            <div class="campo">
 
-      <div class="campo completo">
-        <label for="observacao">Observações</label>
-        <div class="caixa-entrada">
-          <textarea id="observacao" name="observacao" rows="3"
-            placeholder="Informações adicionais para o médico"></textarea>
-        </div>
-      </div>
+                <label for="data">
+                    Data da consulta
+                </label>
 
-      <button type="submit" class="botao-primario">
-        Agendar Consulta
-      </button>
+                <div class="caixa-entrada">
 
-      {% else %}
+                    <input
+                        type="date"
+                        id="data"
+                        name="data"
+                        value="{{ data_selecionada }}"
+                        required
+                        onchange="carregarData(this.value, 'consulta')"
+                    >
 
-      <div class="campo">
-        <label for="tipo_exame">Tipo do exame</label>
-        <div class="caixa-entrada">
-          <select id="tipo_exame" name="tipo_exame" required>
-            <option value="" disabled selected>Selecione o exame</option>
-            <option>Hemograma</option>
-            <option>Raio-X</option>
-            <option>Tomografia</option>
-            <option>Ressonância</option>
-            <option>Ultrassom</option>
-            <option>Eletrocardiograma</option>
-          </select>
-        </div>
-      </div>
+                </div>
 
-      <div class="campo">
-        <label for="data_exame">Data do exame</label>
-        <div class="caixa-entrada">
-          <input type="datetime-local" id="data_exame" name="data_exame" required>
-        </div>
-      </div>
+            </div>
 
-      <div class="campo completo">
-        <label for="descricao">Descrição</label>
-        <div class="caixa-entrada">
-          <textarea id="descricao" name="descricao" rows="3"
-            placeholder="Informações adicionais sobre o exame"></textarea>
-        </div>
-      </div>
 
-      <button type="submit" class="botao-primario">
-        Agendar Exame
-      </button>
+            <!-- TIPO DA CONSULTA -->
 
-      {% endif %}
+            <div class="campo">
+
+                <label for="tipo_consulta">
+                    Tipo de consulta
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <select
+                        id="tipo_consulta"
+                        name="tipo_consulta"
+                        required
+                        {% if not data_selecionada %}disabled{% endif %}
+                    >
+
+                        <option value="">
+                            {% if data_selecionada %}
+                                Selecione o tipo de consulta
+                            {% else %}
+                                Escolha primeiro a data
+                            {% endif %}
+                        </option>
+
+                        {% for vaga in consultas_disponiveis %}
+
+                            <option value="{{ vaga.tipo_consulta }}">
+
+                                {{ vaga.tipo_consulta }}
+
+                            </option>
+
+                        {% empty %}
+
+                            {% if data_selecionada %}
+
+                                <option value="">
+                                    Nenhuma consulta disponível
+                                </option>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- TURNO -->
+
+            <div class="campo">
+
+                <label for="turno">
+                    Turno
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <select
+                        id="turno"
+                        name="turno"
+                        required
+                        {% if not data_selecionada %}disabled{% endif %}
+                    >
+
+                        <option value="">
+                            Selecione o turno
+                        </option>
+
+                        {% for vaga in consultas_disponiveis %}
+
+                            <option value="{{ vaga.turno }}">
+
+                                {{ vaga.turno }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- OBSERVAÇÃO -->
+
+            <div class="campo completo">
+
+                <label for="observacao">
+                    Observações
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <textarea
+                        id="observacao"
+                        name="observacao"
+                        rows="4"
+                        placeholder="Informações adicionais para o médico"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="completo">
+
+                <button
+                    type="submit"
+                    class="botao-primario"
+                >
+
+                    Agendar Consulta
+
+                </button>
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- ==============================
+                 EXAME
+            =============================== -->
+
+            <!-- DATA -->
+
+            <div class="campo">
+
+                <label for="data">
+                    Data do exame
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <input
+                        type="date"
+                        id="data"
+                        name="data"
+                        value="{{ data_selecionada }}"
+                        required
+                        onchange="carregarData(this.value, 'exame')"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- TIPO DO EXAME -->
+
+            <div class="campo">
+
+                <label for="tipo_exame">
+                    Tipo do exame
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <select
+                        id="tipo_exame"
+                        name="tipo_exame"
+                        required
+                        {% if not data_selecionada %}disabled{% endif %}
+                    >
+
+                        <option value="">
+                            {% if data_selecionada %}
+                                Selecione o exame
+                            {% else %}
+                                Escolha primeiro a data
+                            {% endif %}
+                        </option>
+
+                        {% for vaga in exames_disponiveis %}
+
+                            <option value="{{ vaga.tipo_exame }}">
+
+                                {{ vaga.tipo_exame }}
+
+                            </option>
+
+                        {% empty %}
+
+                            {% if data_selecionada %}
+
+                                <option value="">
+                                    Nenhum exame disponível
+                                </option>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- TURNO -->
+
+            <div class="campo">
+
+                <label for="turno">
+                    Turno
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <select
+                        id="turno"
+                        name="turno"
+                        required
+                        {% if not data_selecionada %}disabled{% endif %}
+                    >
+
+                        <option value="">
+                            Selecione o turno
+                        </option>
+
+                        {% for vaga in exames_disponiveis %}
+
+                            <option value="{{ vaga.turno }}">
+
+                                {{ vaga.turno }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- DESCRIÇÃO -->
+
+            <div class="campo completo">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <div class="caixa-entrada">
+
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        rows="4"
+                        placeholder="Informações adicionais sobre o exame"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="completo">
+
+                <button
+                    type="submit"
+                    class="botao-primario"
+                >
+
+                    Agendar Exame
+
+                </button>
+
+            </div>
+
+        {% endif %}
 
     </div>
-  </form>
 
-</section>
-</div>
+    </form>
+    <script>
+
+    function carregarData(data, tipo) {
+
+        if (!data) {
+            return;
+        }
+
+        const url =
+            window.location.pathname +
+            "?tipo=" +
+            tipo +
+            "&data=" +
+            data;
+
+        window.location.href = url;
+    }
+
+    </script>
 </body>
 </html>

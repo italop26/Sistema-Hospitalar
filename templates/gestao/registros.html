@@ -5,34 +5,24 @@ Registros
 {% endblock %}
 
 {% block titulo %}
-Registros do Paciente
+Registros
 {% endblock %}
 
 {% block subtitulo %}
-Histórico de consultas e exames
+Histórico geral de consultas e exames
 {% endblock %}
 
 {% block content %}
 
 <div class="secao">
 
-    <div class="cabecalho-secao">
-
-        <h2>
-            Histórico
-        </h2>
-
-    </div>
-
-
     <!-- CONSULTAS -->
 
-    <div style="margin-bottom:40px;">
+    <div style="margin-bottom: 40px;">
 
-        <h2 style="margin-bottom:20px;">
-            📅 Consultas
-        </h2>
-
+        <div class="cabecalho-secao">
+            <h2>📅 Consultas</h2>
+        </div>
 
         {% if consultas %}
 
@@ -40,36 +30,64 @@ Histórico de consultas e exames
 
                 {% for consulta in consultas %}
 
-                    <div class="item-registro">
+                    <a
+                        href="{% url 'gestao_clinica:alterar_status_consulta' consulta.id %}"
+                        class="item-registro"
+                    >
 
                         <div class="info-registro">
 
                             <span class="titulo-registro">
-                                {{ consulta.especialidade }}
+                                {{ consulta.paciente.nome }}
                             </span>
 
                             <span class="subtitulo-registro">
-                                {{ consulta.data }}
+                                {{ consulta.especialidade }}
                             </span>
 
                         </div>
 
+                        <div class="info-registro">
+
+                            <span class="subtitulo-registro">
+                                👨‍⚕️ {{ consulta.medico.nome }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                📋 {{ consulta.get_tipo_consulta_display }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                📅 {{ consulta.data|date:"d/m/Y " }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                🕐 {{ consulta.get_turno_display }}
+                            </span>
+
+                        </div>
 
                         <span class="status-badge
-                            {% if consulta.status == 'concluido' %}
-                                status-concluido
-                            {% elif consulta.status == 'cancelado' %}
-                                status-cancelado
-                            {% else %}
+                            {% if consulta.status == 'AGENDADO' %}
                                 status-agendado
+                            {% elif consulta.status == 'EM_ANDAMENTO' %}
+                                status-andamento
+                            {% elif consulta.status == 'FINALIZADO' %}
+                                status-concluido
+                            {% elif consulta.status == 'CANCELADO' %}
+                                status-cancelado
+                            {% elif consulta.status == 'ADIADO' %}
+                                status-adiado
+                            {% elif consulta.status == 'EM_ANALISE' %}
+                                status-analise
                             {% endif %}
                         ">
 
-                            {{ consulta.status }}
+                            {{ consulta.get_status_display }}
 
                         </span>
 
-                    </div>
+                    </a>
 
                 {% endfor %}
 
@@ -78,9 +96,7 @@ Histórico de consultas e exames
         {% else %}
 
             <div class="estado-vazio">
-
                 Nenhuma consulta registrada.
-
             </div>
 
         {% endif %}
@@ -92,10 +108,9 @@ Histórico de consultas e exames
 
     <div>
 
-        <h2 style="margin-bottom:20px;">
-            🧪 Exames
-        </h2>
-
+        <div class="cabecalho-secao">
+            <h2>🧪 Exames</h2>
+        </div>
 
         {% if exames %}
 
@@ -103,36 +118,73 @@ Histórico de consultas e exames
 
                 {% for exame in exames %}
 
-                    <div class="item-registro">
+                    <a
+                        href="{% url 'gestao_clinica:alterar_status_exame' exame.id %}"
+                        class="item-registro"
+                    >
 
                         <div class="info-registro">
 
                             <span class="titulo-registro">
-                                {{ exame.especialidade }}
+                                {{ exame.paciente.nome }}
                             </span>
 
                             <span class="subtitulo-registro">
-                                {{ exame.data }}
+                                {{ exame.especialidade }}
                             </span>
 
                         </div>
 
+                        <div class="info-registro">
+
+                            <span class="subtitulo-registro">
+                                👨‍⚕️ {{ exame.medico.nome }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                🧪 {{ exame.get_tipo_exame_display }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                📅 {{ exame.data|date:"d/m/Y " }}
+                            </span>
+
+                            <span class="subtitulo-registro">
+                                🕐 {{ exame.get_turno_display }}
+                            </span>
+
+                            {% if exame.data_conclusao %}
+
+                                <span class="subtitulo-registro">
+                                    ✅ Concluído em:
+                                    {{ exame.data_conclusao|date:"d/m/Y " }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
 
                         <span class="status-badge
-                            {% if exame.status == 'concluido' %}
-                                status-concluido
-                            {% elif exame.status == 'cancelado' %}
-                                status-cancelado
-                            {% else %}
+                            {% if exame.status == 'AGENDADO' %}
                                 status-agendado
+                            {% elif exame.status == 'EM_ANDAMENTO' %}
+                                status-andamento
+                            {% elif exame.status == 'FINALIZADO' %}
+                                status-concluido
+                            {% elif exame.status == 'CANCELADO' %}
+                                status-cancelado
+                            {% elif exame.status == 'ADIADO' %}
+                                status-adiado
+                            {% elif exame.status == 'EM_ANALISE' %}
+                                status-analise
                             {% endif %}
                         ">
 
-                            {{ exame.status }}
+                            {{ exame.get_status_display }}
 
                         </span>
 
-                    </div>
+                    </a>
 
                 {% endfor %}
 
@@ -141,9 +193,7 @@ Histórico de consultas e exames
         {% else %}
 
             <div class="estado-vazio">
-
                 Nenhum exame registrado.
-
             </div>
 
         {% endif %}

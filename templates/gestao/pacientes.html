@@ -1,0 +1,156 @@
+{% extends 'gestao/base.html' %}
+
+{% block title %}Pacientes{% endblock %}
+
+{% block titulo %}
+Pacientes
+{% endblock %}
+
+{% block subtitulo %}
+Gerenciamento dos pacientes cadastrados
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <div>
+
+            <h2>
+                Pacientes cadastrados
+            </h2>
+
+
+
+    <table class="tabela">
+
+        <thead>
+
+            <tr>
+
+                <th>Nome</th>
+
+                <th>CPF</th>
+
+                <th>Telefone</th>
+
+                <th>Status</th>
+
+                <th>Ações</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for paciente in pacientes %}
+
+            <tr>
+
+                <td>
+
+                    {{ paciente.nome }}
+
+                </td>
+
+
+                <td>
+
+                    {{ paciente.cpf }}
+
+                </td>
+
+
+                <td>
+
+                    {{ paciente.telefone|default:"Não informado" }}
+
+                </td>
+
+
+                <td>
+
+                    {% if paciente.ativo %}
+
+                        <span class="status-badge status-concluido">
+                            Ativo
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-badge status-cancelado">
+                            Inativo
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+
+                <td colspan="5">
+
+                    Nenhum paciente cadastrado.
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    {% if pacientes.has_other_pages %}
+
+    <div class="paginacao">
+
+        {% if pacientes.has_previous %}
+
+            <a href="?page={{ pacientes.previous_page_number }}"
+               class="pagina-item">
+
+                ‹
+
+            </a>
+
+        {% endif %}
+
+
+        <span class="pagina-item ativa">
+
+            {{ pacientes.number }}
+
+        </span>
+
+
+        {% if pacientes.has_next %}
+
+            <a href="?page={{ pacientes.next_page_number }}"
+               class="pagina-item">
+
+                ›
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,249 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Atendimento - Consulta</title>
+
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+
+</head>
+
+<body>
+
+<div class="layout-principal">
+
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <div class="marca">
+
+                <span class="ponto"></span>
+
+                Sistema Hospitalar
+
+            </div>
+
+
+            <nav class="menu-lateral">
+
+                <a
+                    href="{% url 'medico:painel_medico' %}"
+                    class="item-menu ativo"
+                >
+
+                    <span class="icone-menu">
+                        🩺
+                    </span>
+
+                    Atendimento
+
+                </a>
+
+
+                <a
+                    href="{% url 'medico:perfil_medico' %}"
+                    class="item-menu"
+                >
+
+                    <span class="icone-menu">
+                        👤
+                    </span>
+
+                    Perfil
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="item-sair">
+
+            <a
+                href="{% url 'medico:logout_medico' %}"
+                class="item-menu"
+            >
+
+                <span class="icone-menu">
+                    ↪
+                </span>
+
+                Sair
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="conteudo-principal">
+
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Consulta
+                </span>
+
+                <h1>
+                    Atendimento
+                </h1>
+
+                <p class="subtitulo">
+                    Registre as informações do atendimento do paciente.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <section class="secao">
+
+
+            <div class="cabecalho-secao">
+
+                <div>
+
+                    <h2>
+                        Dados do paciente
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="grade-perfil">
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Paciente
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ paciente.nome }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Especialidade
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ especialidade }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Data
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ consulta.data|date:"d/m/Y H:i" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <section class="secao">
+
+
+            <div class="cabecalho-secao">
+
+                <h2>
+                    Registro do atendimento
+                </h2>
+
+            </div>
+
+
+            <form
+                method="POST"
+                class="formulario-secao"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="campo">
+
+                    <label for="observacoes">
+                        Observações
+                    </label>
+
+                    <textarea
+                        id="observacoes"
+                        name="observacoes"
+                        placeholder="Registre as informações da consulta..."
+                    >{{ atendimento.observacoes }}</textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="encaminhamento">
+                        Encaminhamento
+                    </label>
+
+                    <textarea
+                        id="encaminhamento"
+                        name="encaminhamento"
+                        placeholder="Registre um possível encaminhamento..."
+                    >{{ atendimento.encaminhamento }}</textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="botao-primario"
+                >
+                    Continuar
+                </button>
+
+            </form>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+</body>
+</html>
+```

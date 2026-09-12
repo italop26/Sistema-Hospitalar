@@ -1,0 +1,204 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Confirmar Atendimento</title>
+
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+</head>
+
+<body>
+
+<div class="pagina">
+
+
+    <div class="painel-marca">
+
+        <div>
+
+            <div class="marca">
+
+                <span class="ponto"></span>
+
+                Sistema Hospitalar
+
+            </div>
+
+
+            <div class="texto-marca">
+
+                <div>
+
+                    <h1>
+                        Confirmação
+                    </h1>
+
+                    <p>
+                        Confirme sua senha para finalizar
+                        o atendimento com segurança.
+                    </p>
+
+                </div>
+
+
+                <div class="lista-etapas">
+
+                    <div class="etapa concluida">
+
+                        <span class="marca-etapa">
+                            ✓
+                        </span>
+
+                        <span class="rotulo-etapa">
+                            Atendimento preenchido
+                        </span>
+
+                    </div>
+
+
+                    <div class="etapa concluida">
+
+                        <span class="marca-etapa">
+                            2
+                        </span>
+
+                        <span class="rotulo-etapa">
+                            Confirmação de segurança
+                        </span>
+
+                    </div>
+
+
+                    <div class="etapa">
+
+                        <span class="marca-etapa">
+                            3
+                        </span>
+
+                        <span class="rotulo-etapa">
+                            Finalização
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="rodape-marca">
+
+            Sistema Hospitalar
+
+        </div>
+
+    </div>
+
+
+    <div class="painel-formulario">
+
+
+        <div class="cartao">
+
+            <span class="rotulo">
+                Segurança
+            </span>
+
+
+            <h1>
+                Confirmar atendimento
+            </h1>
+
+
+            <p class="subtitulo">
+
+                Digite sua senha para confirmar
+                a finalização deste atendimento.
+
+            </p>
+
+
+            {% if erro %}
+
+                <div class="alerta alerta-erro">
+
+                    {{ erro }}
+
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="campo">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+
+                    <div class="caixa-entrada">
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Digite sua senha"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="botao-primario"
+                >
+
+                    Confirmar e concluir
+
+                </button>
+
+
+                <a
+                    href="{% url 'medico:painel_medico' %}"
+                    class="botao-secundario"
+                >
+
+                    Voltar
+
+                </a>
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
+```

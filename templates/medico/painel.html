@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Painel Médico</title>
+
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+
+</head>
+
+<body>
+
+<div class="layout-principal">
+
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <div class="marca">
+
+                <span class="ponto"></span>
+
+                Sistema Hospitalar
+
+            </div>
+
+
+            <nav class="menu-lateral">
+
+                <a
+                    href="{% url 'medico:painel' %}"
+                    class="item-menu ativo"
+                >
+
+                    <span class="icone-menu">
+                        🏠
+                    </span>
+
+                    Painel
+
+                </a>
+
+
+                <a
+                    href="{% url 'medico:perfil' %}"
+                    class="item-menu"
+                >
+
+                    <span class="icone-menu">
+                        👤
+                    </span>
+
+                    Perfil
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="item-sair">
+
+            <a
+                href="{% url 'medico:logout_medico' %}"
+                class="item-menu"
+            >
+
+                <span class="icone-menu">
+                    ↪
+                </span>
+
+                Sair
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="conteudo-principal">
+
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Painel médico
+                </span>
+
+                <h1>
+                    Atendimentos de hoje
+                </h1>
+
+                <p class="subtitulo">
+                    Consulte os pacientes e inicie seus atendimentos.
+                </p>
+
+            </div>
+
+
+            <div class="cartao-usuario">
+
+                <div class="avatar-usuario">
+
+                    {{ request.medico.nome}}
+
+                </div>
+
+
+                <div class="dados-usuario">
+
+                    <span class="nome-usuario">
+
+                        {{ request.medico.nome }}
+
+                    </span>
+
+                    <span class="cpf-usuario">
+
+                        CRM: {{ request.user.medico.crm }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="secao">
+
+            <div class="cabecalho-secao">
+
+                <div>
+
+                    <h2>
+                        Agenda de hoje
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            {% if atendimentos %}
+
+                <div class="lista-registros">
+
+
+                    {% for atendimento in atendimentos %}
+
+                        <div class="item-registro">
+
+
+                            <div class="info-registro">
+
+                                <span class="titulo-registro">
+
+                                    {{ atendimento.paciente.nome }}
+
+                                </span>
+
+
+                                <span class="subtitulo-registro">
+
+                                    {{ atendimento.especialidade }}
+
+                                    ·
+
+                                    {{ atendimento.data|date:"H:i" }}
+
+                                    ·
+
+                                    {% if atendimento.tipo == "consulta" %}
+                                        Consulta
+                                    {% else %}
+                                        Exame
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <span class="status-badge status-agendado">
+
+                                    {{ atendimento.status }}
+
+                                </span>
+
+
+                                {% if atendimento.tipo == "consulta" %}
+
+                                    <a
+                                        href="{% url 'medico:iniciar_consulta' atendimento.id %}"
+                                        class="botao-secundario"
+                                    >
+                                        Iniciar
+                                    </a>
+
+                                {% else %}
+
+                                    <a
+                                        href="{% url 'medico:iniciar_exame' atendimento.id %}"
+                                        class="botao-secundario"
+                                    >
+                                        Iniciar
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+            {% else %}
+
+                <div class="estado-vazio">
+
+                    <h2>
+                        Nenhum atendimento hoje
+                    </h2>
+
+                    <p>
+                        Não existem consultas ou exames
+                        disponíveis para você neste momento.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <footer class="rodape">
+
+            Sistema Hospitalar
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+</body>
+</html>
+

@@ -10,8 +10,6 @@ Dashboard
 
 {% block subtitulo %}
 Visão geral da clínica
-{% endblock %}
-
 
 
 
@@ -72,6 +70,7 @@ Visão geral da clínica
         </header>
 
 
+
         <!-- =================================================
              ESTATÍSTICAS
         ================================================== -->
@@ -89,9 +88,27 @@ Visão geral da clínica
                         Pacientes
                     </span>
 
-                    <h2>
-                        {{ pacientes }}
-                    </h2>
+                    <div>
+
+                        <h2>
+                            {{ pacientes }}
+                        </h2>
+
+                        {% if pacientes > 0 %}
+
+                            <p>
+                                Pacientes cadastrados
+                            </p>
+
+                        {% else %}
+
+                            <p class="mensagem-vazia">
+                                Nenhum paciente cadastrado.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
@@ -100,6 +117,7 @@ Visão geral da clínica
                 </div>
 
             </div>
+
 
 
             <!-- MÉDICOS -->
@@ -113,12 +131,33 @@ Visão geral da clínica
                     </span>
 
                     <div>
-                        <h2>{{ medicos }}</h2>
-                        <p>Médicos cadastrados</p>
 
-                        <a href="{% url 'gestao_clinica:listar_medicos' %}">
-                         Ver detalhes
-                        </a>
+                        <h2>
+                            {{ medicos }}
+                        </h2>
+
+                        {% if medicos > 0 %}
+
+                            <p>
+                                Médicos cadastrados
+                            </p>
+
+                            <a href="{% url 'gestao_clinica:listar_medicos' %}">
+                                Ver detalhes
+                            </a>
+
+                        {% else %}
+
+                            <p class="mensagem-vazia">
+                                Nenhum médico cadastrado.
+                            </p>
+
+                            <a href="{% url 'gestao_clinica:listar_medicos' %}">
+                                Gerenciar médicos
+                            </a>
+
+                        {% endif %}
+
                     </div>
 
                 </div>
@@ -128,6 +167,8 @@ Visão geral da clínica
                 </div>
 
             </div>
+
+
 
 
             <!-- CONSULTAS -->
@@ -140,9 +181,27 @@ Visão geral da clínica
                         Consultas hoje
                     </span>
 
-                    <h2>
-                        {{ consultas_de_hoje }}
-                    </h2>
+                    <div>
+
+                        <h2>
+                            {{ consultas_de_hoje }}
+                        </h2>
+
+                        {% if consultas_de_hoje > 0 %}
+
+                            <p>
+                                Consultas agendadas
+                            </p>
+
+                        {% else %}
+
+                            <p class="mensagem-vazia">
+                                Nenhuma consulta hoje.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
@@ -151,6 +210,7 @@ Visão geral da clínica
                 </div>
 
             </div>
+
 
 
             <!-- EXAMES -->
@@ -163,9 +223,27 @@ Visão geral da clínica
                         Exames hoje
                     </span>
 
-                    <h2>
-                        {{ exames_de_hoje }}
-                    </h2>
+                    <div>
+
+                        <h2>
+                            {{ exames_de_hoje }}
+                        </h2>
+
+                        {% if exames_de_hoje > 0 %}
+
+                            <p>
+                                Exames agendados
+                            </p>
+
+                        {% else %}
+
+                            <p class="mensagem-vazia">
+                                Nenhum exame hoje.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
@@ -178,113 +256,6 @@ Visão geral da clínica
 
         </section>
 
-
-        <!-- =================================================
-             NAVEGAÇÃO
-        ================================================== -->
-
-        <section class="navegacao">
-
-            <div class="titulo-navegacao">
-                Navegação
-            </div>
-
-
-            <nav class="menu-lateral">
-
-                <a href="#" class="item-menu ativo">
-
-                    <span class="icone-menu">
-                        ⌂
-                    </span>
-
-                    <span>
-                        Início
-                    </span>
-
-                </a>
-
-
-                <a href="#" class="item-menu">
-
-                    <span class="icone-menu">
-                        ◷
-                    </span>
-
-                    <span>
-                        Acompanhamento
-                    </span>
-
-                </a>
-
-
-                <a href="#" class="item-menu">
-
-                    <span class="icone-menu">
-                        P
-                    </span>
-
-                    <span>
-                        Pacientes
-                    </span>
-
-                </a>
-
-
-                <a href="#" class="item-menu">
-
-                    <span class="icone-menu">
-                        C
-                    </span>
-
-                    <span>
-                        Consultas
-                    </span>
-
-                </a>
-
-
-                <a href="#" class="item-menu">
-
-                    <span class="icone-menu">
-                        E
-                    </span>
-
-                    <span>
-                        Exames
-                    </span>
-
-                </a>
-
-
-                <a href="#" class="item-menu">
-
-                    <span class="icone-menu">
-                        M
-                    </span>
-
-                    <span>
-                        Médicos
-                    </span>
-
-                </a>
-
-
-                <a href="#" class="item-menu">
-
-                    <span class="icone-menu">
-                        ≡
-                    </span>
-
-                    <span>
-                        Todos os registros
-                    </span>
-
-                </a>
-
-            </nav>
-
-        </section>
 
 
         <!-- =================================================
@@ -306,14 +277,20 @@ Visão geral da clínica
                         Consultas e exames
                     </h2>
 
+                    <p class="subtitulo">
+                        De {{ data_inicial|date:"d/m/Y" }}
+                        até {{ data_final|date:"d/m/Y" }}
+                    </p>
+
                 </div>
 
 
-                <a href="#" class="link-discreto">
-                    Ver todos
-                </a>
+                <span class="link-discreto">
+                    10 dias
+                </span>
 
             </div>
+
 
 
             <!-- =================================================
@@ -330,7 +307,7 @@ Visão geral da clínica
                     >
 
                         <span>
-                            {{ dia.data|date:"D" }}
+                            {{ dia.dia_semana }}
                         </span>
 
                         <strong>
@@ -344,30 +321,57 @@ Visão geral da clínica
             </div>
 
 
+
             <!-- =================================================
                  REGISTROS DOS 10 DIAS
             ================================================== -->
 
             {% for dia in dias %}
 
-                <div
-                    class="secao"
-                    id="dia-{{ dia.data|date:'Y-m-d' }}"
-                >
+        <div
+            class="secao dia-acompanhamento {% if dia.hoje %}dia-padrao{% endif %}"
+            id="dia-{{ dia.data|date:'Y-m-d' }}"
+        >
 
                     <div class="cabecalho-secao">
 
                         <div>
 
-                            <h2>
-
+                            <span class="rotulo">
                                 {% if dia.hoje %}
                                     Hoje
                                 {% else %}
-                                    {{ dia.data|date:"d/m/Y" }}
+                                    Dia
                                 {% endif %}
+                            </span>
+
+                            <h2>
+
+                                {{ dia.data|date:"d/m/Y" }}
 
                             </h2>
+
+                            <div class="resumo-dia">
+
+                                <span class="mini-badge">
+                                    📅 {{ dia.total_consultas }}
+                                    {% if dia.total_consultas == 1 %}
+                                        consulta
+                                    {% else %}
+                                        consultas
+                                    {% endif %}
+                                </span>
+
+                                <span class="mini-badge">
+                                    🧪 {{ dia.total_exames }}
+                                    {% if dia.total_exames == 1 %}
+                                        exame
+                                    {% else %}
+                                        exames
+                                    {% endif %}
+                                </span>
+
+                            </div>
 
                         </div>
 
@@ -387,6 +391,7 @@ Visão geral da clínica
                     </div>
 
 
+
                     <!-- =========================================
                          CONSULTAS
                     ========================================== -->
@@ -403,7 +408,11 @@ Visão geral da clínica
 
                                         <span class="titulo-registro">
 
-                                            {{ consulta.paciente.nome }}
+                                            {% if consulta.paciente %}
+                                                {{ consulta.paciente.nome }}
+                                            {% else %}
+                                                Paciente não encontrado
+                                            {% endif %}
 
                                         </span>
 
@@ -411,8 +420,11 @@ Visão geral da clínica
                                         <span class="subtitulo-registro">
 
                                             Consulta •
+
                                             {{ consulta.especialidade }}
+
                                             •
+
                                             {{ consulta.data|date:"H:i" }}
 
                                         </span>
@@ -420,7 +432,8 @@ Visão geral da clínica
                                     </div>
 
 
-                                    <span class="status-badge
+                                    <span
+                                        class="status-badge
                                         {% if consulta.status == 'AGENDADO' %}
                                             status-agendado
                                         {% elif consulta.status == 'CONCLUIDO' %}
@@ -428,7 +441,8 @@ Visão geral da clínica
                                         {% elif consulta.status == 'CANCELADO' %}
                                             status-cancelado
                                         {% endif %}
-                                    ">
+                                    "
+                                    >
 
                                         {{ consulta.get_status_display }}
 
@@ -441,6 +455,7 @@ Visão geral da clínica
                         </div>
 
                     {% endif %}
+
 
 
                     <!-- =========================================
@@ -459,7 +474,11 @@ Visão geral da clínica
 
                                         <span class="titulo-registro">
 
-                                            {{ exame.paciente.nome }}
+                                            {% if exame.paciente %}
+                                                {{ exame.paciente.nome }}
+                                            {% else %}
+                                                Paciente não encontrado
+                                            {% endif %}
 
                                         </span>
 
@@ -467,8 +486,11 @@ Visão geral da clínica
                                         <span class="subtitulo-registro">
 
                                             Exame •
+
                                             {{ exame.tipo_exame }}
+
                                             •
+
                                             {{ exame.data|date:"H:i" }}
 
                                         </span>
@@ -476,7 +498,8 @@ Visão geral da clínica
                                     </div>
 
 
-                                    <span class="status-badge
+                                    <span
+                                        class="status-badge
                                         {% if exame.status == 'AGENDADO' %}
                                             status-agendado
                                         {% elif exame.status == 'CONCLUIDO' %}
@@ -484,7 +507,8 @@ Visão geral da clínica
                                         {% elif exame.status == 'CANCELADO' %}
                                             status-cancelado
                                         {% endif %}
-                                    ">
+                                    "
+                                    >
 
                                         {{ exame.get_status_display }}
 
@@ -497,6 +521,7 @@ Visão geral da clínica
                         </div>
 
                     {% endif %}
+
 
 
                     <!-- =========================================
@@ -513,12 +538,14 @@ Visão geral da clínica
 
                     {% endif %}
 
+
                 </div>
 
             {% endfor %}
 
 
         </section>
+
 
 
         <!-- =================================================
@@ -535,3 +562,5 @@ Visão geral da clínica
     </main>
 
 </div>
+
+{% endblock %}

@@ -27,8 +27,8 @@ class ConsultaAPIView(APIView):
                 especialidade=serializer.validated_data[
                     "especialidade"
                 ],
-                data_consulta=serializer.validated_data[
-                    "data_consulta"
+                data=serializer.validated_data[
+                    "data"
                 ],
             )
 

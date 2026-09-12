@@ -1,33 +1,16 @@
 {% extends 'gestao/base.html' %}
 
 {% block title %}
-
-{% if configuracao %}
-    Atualizar Vagas
-{% else %}
-    Nova Configuração de Vagas
-{% endif %}
-
+Excluir configuração
 {% endblock %}
-
 
 {% block titulo %}
-
-{% if configuracao %}
-    Atualizar Vagas
-{% else %}
-    Nova Configuração
-{% endif %}
-
+Excluir configuração de vagas
 {% endblock %}
-
 
 {% block subtitulo %}
-
-Configure a quantidade de vagas por especialidade e turno.
-
+Confirme a exclusão da configuração selecionada.
 {% endblock %}
-
 
 {% block content %}
 
@@ -35,180 +18,123 @@ Configure a quantidade de vagas por especialidade e turno.
 
     <div class="cabecalho-secao">
 
-        <h2>
-
-            {% if configuracao %}
-                Editar configuração
-            {% else %}
-                Criar configuração
-            {% endif %}
-
-        </h2>
+        <div>
+            <h2>
+                Confirmar exclusão
+            </h2>
+        </div>
 
     </div>
 
 
-    <form method="POST"
-          class="formulario-secao">
+    <div class="grade-perfil">
+
+        <!-- MÉDICO -->
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Médico
+            </span>
+
+            <span class="valor-perfil">
+                {{ configuracao.medico.nome }}
+            </span>
+
+        </div>
+
+
+        <!-- ESPECIALIDADE -->
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Especialidade
+            </span>
+
+            <span class="valor-perfil">
+                {{ configuracao.get_especialidade_display }}
+            </span>
+
+        </div>
+
+
+        <!-- DIA -->
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Dia
+            </span>
+
+            <span class="valor-perfil">
+                {{ configuracao.get_dia_display }}
+            </span>
+
+        </div>
+
+
+        <!-- TURNO -->
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Turno
+            </span>
+
+            <span class="valor-perfil">
+                {{ configuracao.get_turno_display }}
+            </span>
+
+        </div>
+
+
+        <!-- VAGAS -->
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Quantidade de vagas
+            </span>
+
+            <span class="valor-perfil">
+                {{ configuracao.quantidade_vagas }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="alerta alerta-aviso">
+
+        Atenção: esta configuração de vagas será removida
+        permanentemente.
+
+    </div>
+
+
+    <form
+        method="POST"
+        action="{% url 'gestao_clinica:excluir_configuracao_vagas' configuracao.id %}"
+    >
 
         {% csrf_token %}
 
-
-        <div class="grade-campos">
-
-            <div class="campo">
-
-                <label for="especialidade">
-                    Especialidade
-                </label>
-
-                <select
-                    name="especialidade"
-                    id="especialidade"
-                    {% if configuracao %}disabled{% endif %}
-                    required
-                >
-
-                    <option value="">
-                        Selecione uma especialidade
-                    </option>
+        <button
+            type="submit"
+            class="botao-secundario botao-excluir"
+        >
+            Confirmar exclusão
+        </button>
 
 
-                    {% for valor, nome in especialidade_choices %}
-
-                        <option
-                            value="{{ valor }}"
-                            {% if configuracao.especialidade == valor %}
-                                selected
-                            {% endif %}
-                        >
-
-                            {{ nome }}
-
-                        </option>
-
-                    {% endfor %}
-
-                </select>
-
-                {% if configuracao %}
-
-                    <input
-                        type="hidden"
-                        name="especialidade"
-                        value="{{ configuracao.especialidade }}"
-                    >
-
-                {% endif %}
-
-            </div>
-
-
-            <div class="campo">
-
-                <label for="turno">
-                    Turno
-                </label>
-
-                <select
-                    name="turno"
-                    id="turno"
-                    {% if configuracao %}disabled{% endif %}
-                    required
-                >
-
-                    <option value="">
-                        Selecione um turno
-                    </option>
-
-
-                    {% for valor, nome in turno_choices %}
-
-                        <option
-                            value="{{ valor }}"
-                            {% if configuracao.turno == valor %}
-                                selected
-                            {% endif %}
-                        >
-
-                            {{ nome }}
-
-                        </option>
-
-                    {% endfor %}
-
-                </select>
-
-                {% if configuracao %}
-
-                    <input
-                        type="hidden"
-                        name="turno"
-                        value="{{ configuracao.turno }}"
-                    >
-
-                {% endif %}
-
-            </div>
-
-
-            <div class="campo completo">
-
-                <label for="quantidade_vagas">
-                    Quantidade de vagas
-                </label>
-
-                <input
-                    type="number"
-                    name="quantidade_vagas"
-                    id="quantidade_vagas"
-                    min="0"
-                    value="{{ configuracao.quantidade_vagas|default:'' }}"
-                    required
-                >
-
-                <span class="dica">
-
-                    Informe quantas vagas estarão disponíveis
-                    para essa especialidade nesse turno.
-
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div style="
-            display:flex;
-            gap:12px;
-            margin-top:10px;
-        ">
-
-            <button
-                type="submit"
-                class="botao-secundario botao-editar"
-            >
-
-                {% if configuracao %}
-                    Salvar alterações
-                {% else %}
-                    Criar configuração
-                {% endif %}
-
-            </button>
-
-
-            <a
-                href="{% url 'gestao:listar_configuracao_vagas' %}"
-                class="botao-secundario"
-            >
-
-                Cancelar
-
-            </a>
-
-        </div>
+        <a
+            href="{% url 'gestao_clinica:listar_configuracao_vagas' %}"
+            class="botao-secundario"
+        >
+            Cancelar
+        </a>
 
     </form>
 

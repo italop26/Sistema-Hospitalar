@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Início | MedAgenda — Central de Exames</title>
-<link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+<link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
 
 </head>
 <body>
@@ -61,7 +61,7 @@
         {% for consulta in consultas %}
         <div class="item-registro">
           <div class="info-registro">
-            <span class="titulo-registro">{{consulta.especialidade}} - {{ consulta.data_consulta|date:"d/m/Y" }}</span>
+            <span class="titulo-registro">{{consulta.especialidade}} - {{ consulta.data|date:"d/m/Y" }}</span>
           </div>
           <span class="status-badge status-{{ consulta.status|lower }}">{{ consulta.status }}</span>
           <a href="#" class="link-discreto">Ver relatório</a>
@@ -85,7 +85,7 @@
         {% for exame in exames %}
         <div class="item-registro">
           <div class="info-registro">
-            <span class="titulo-registro">{{ exame.tipo_exame}} - {{ exame.data_exame|date:"d/m/Y" }} </span>
+            <span class="titulo-registro">{{ exame.tipo_exame}} - {{ exame.data|date:"d/m/Y" }} </span>
             <span class="subtitulo-registro">{{ exame.status }}</span>
           </div>
           <a href="#" class="link-discreto">Ver resumo</a>

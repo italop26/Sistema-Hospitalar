@@ -1,0 +1,260 @@
+{% extends "gestao/base.html" %}
+
+{% block title %}
+Atualizar Médico
+{% endblock %}
+
+{% block titulo %}
+Atualizar Médico
+{% endblock %}
+
+{% block subtitulo %}
+Atualize as informações e os horários de atendimento.
+{% endblock %}
+
+{% block content %}
+
+<div class="secao">
+
+    <div class="cabecalho-secao">
+
+        <h2>
+            {{ medico.user.get_full_name }}
+        </h2>
+
+    </div>
+
+
+    <form method="POST"
+          action="{% url 'gestao_clinica:atualizar_medico' medico.id %}">
+
+        {% csrf_token %}
+
+        <div class="grade-campos">
+
+            <div class="campo">
+
+                <label for="first_name">
+                    Nome
+                </label>
+
+                <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    value="{{ medico.user.first_name }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="last_name">
+                    Sobrenome
+                </label>
+
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    value="{{ medico.user.last_name }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="email">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ medico.user.email }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="idade">
+                    Idade
+                </label>
+
+                <input
+                    type="number"
+                    id="idade"
+                    name="idade"
+                    value="{{ medico.idade }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="crm">
+                    CRM
+                </label>
+
+                <input
+                    type="text"
+                    id="crm"
+                    name="crm"
+                    value="{{ medico.crm }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="cpf">
+                    CPF
+                </label>
+
+                <input
+                    type="text"
+                    id="cpf"
+                    name="cpf"
+                    value="{{ medico.cpf }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="especialidade">
+                    Especialidade
+                </label>
+
+                <select
+                    id="especialidade"
+                    name="especialidade"
+                    required
+                >
+
+                    {% for valor, nome in especialidade_choices %}
+
+                        <option
+                            value="{{ valor }}"
+                            {% if medico.especialidade == valor %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             DIAS
+        ================================= -->
+
+        <div class="campo">
+
+            <label>
+                Dias de atendimento
+            </label>
+
+            <div class="grade-campos">
+
+                {% for valor, nome in dia_choices %}
+
+                    <label class="aceite-termos">
+
+                        <input
+                            type="checkbox"
+                            name="dias"
+                            value="{{ valor }}"
+                            {% if valor in dias_medico %}
+                                checked
+                            {% endif %}
+                        >
+
+                        {{ nome }}
+
+                    </label>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             TURNOS
+        ================================= -->
+
+        <div class="campo">
+
+            <label>
+                Turnos de atendimento
+            </label>
+
+            <div class="grade-campos">
+
+                {% for valor, nome in turno_choices %}
+
+                    <label class="aceite-termos">
+
+                        <input
+                            type="checkbox"
+                            name="turnos"
+                            value="{{ valor }}"
+                            {% if valor in turnos_medico %}
+                                checked
+                            {% endif %}
+                        >
+
+                        {{ nome }}
+
+                    </label>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="botao-primario"
+        >
+            Salvar alterações
+        </button>
+
+
+        <a
+            href="{% url 'gestao_clinica:listar_medicos' %}"
+            class="botao-secundario"
+        >
+            Cancelar
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

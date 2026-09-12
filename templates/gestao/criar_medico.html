@@ -1,143 +1,151 @@
 {% extends "gestao/base.html" %}
 
+{% block title %}
+Cadastrar Médico
+{% endblock %}
+
+{% block titulo %}
+Cadastrar Médico
+{% endblock %}
+
+{% block subtitulo %}
+Cadastre um novo médico no sistema.
+{% endblock %}
+
 {% block content %}
 
-<div class="conteudo-principal">
+<div class="secao">
 
-    <div class="cabecalho-principal">
-        <div>
-            <span class="rotulo">Gestão</span>
-            <a href="{% url 'gestao_clinica:criar_gestor'%}" class="item-menu"></a>
-            <span class="texto-menu">Gestao</span>
-            <p class="subtitulo">
-                Cadastre um novo usuário para administrar o sistema.
-            </p>
-        </div>
-
-        <div>
-            <span class="rotulo">Medico</span>
-            <a href="{% url 'gestao_clinica:criar_medico' %}" class="item-menu"></a>
-            <p class="subtitulo">
-                Cadastre um novo médico no sistema.
-            </p>
-            
-        </div>
+    <div class="cabecalho-secao">
+        <h2>Dados do médico</h2>
     </div>
 
-    <section class="secao">
+    <form method="POST"
+          action="{% url 'gestao_clinica:criar_medico' %}">
 
-        <div class="cabecalho-secao">
-            <h2>Dados do médico</h2>
-        </div>
+        {% csrf_token %}
 
-        <form method="POST" action="{% url 'gestao_clinica:criar_medico' %}">
-            {% csrf_token %}
+        <div class="grade-campos">
 
-            <div class="grade-campos">
+            <div class="campo">
+                <label for="nome">Nome completo</label>
 
-                <div class="campo">
-                    <label for="first_name">Nome</label>
-                    <input
-                        type="text"
-                        id="first_name"
-                        name="first_name"
-                        required
-                    >
-                </div>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    required
+                >
+            </div>
 
-                <div class="campo">
-                    <label for="last_name">Sobrenome</label>
-                    <input
-                        type="text"
-                        id="last_name"
-                        name="last_name"
-                    >
-                </div>
 
-                <div class="campo">
-                    <label for="email">E-mail</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                    >
-                </div>
+            <div class="campo">
+                <label for="email">E-mail</label>
 
-                <div class="campo">
-                    <label for="username">Usuário</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        required
-                    >
-                </div>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                >
+            </div>
 
-                <div class="campo">
-                    <label for="idade">Idade</label>
-                    <input
-                        type="number"
-                        id="idade"
-                        name="idade"
-                        required
-                    >
-                </div>
 
-                <div class="campo">
-                    <label for="crm">CRM</label>
-                    <input
-                        type="text"
-                        id="crm"
-                        name="crm"
-                        required
-                    >
-                </div>
+            <div class="campo">
+                <label for="idade">Idade</label>
 
-                <div class="campo">
-                    <label for="cpf">CPF</label>
-                    <input
-                        type="text"
-                        id="cpf"
-                        name="cpf"
-                        required
-                    >
-                </div>
+                <input
+                    type="number"
+                    id="idade"
+                    name="idade"
+                    required
+                >
+            </div>
 
-                <div class="campo">
-                    <label for="especialidade">Especialidade</label>
 
-                    <select
-                        id="especialidade"
-                        name="especialidade"
-                        required
-                    >
-                        <option value="">Selecione uma especialidade</option>
+            <div class="campo">
+                <label for="crm">CRM</label>
 
-                        {% for valor, nome in especialidade_choices %}
-                            <option value="{{ valor }}">
-                                {{ nome }}
-                            </option>
-                        {% endfor %}
+                <input
+                    type="text"
+                    id="crm"
+                    name="crm"
+                    required
+                >
+            </div>
 
-                    </select>
-                </div>
+
+            <div class="campo">
+                <label for="cpf">CPF</label>
+
+                <input
+                    type="text"
+                    id="cpf"
+                    name="cpf"
+                    required
+                >
+            </div>
+
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    required
+                >
+            </div>
+
+
+            <div class="campo">
+                <label for="especialidade">
+                    Especialidade
+                </label>
+
+                <select
+                    id="especialidade"
+                    name="especialidade"
+                    required
+                >
+
+                    <option value="">
+                        Selecione uma especialidade
+                    </option>
+
+                    {% for valor, nome in especialidade_choices %}
+
+                        <option value="{{ valor }}">
+                            {{ nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
 
             </div>
 
-            <button type="submit" class="botao-primario">
-                Cadastrar médico
-            </button>
+        </div>
 
-            <a
-                href="{% url 'gestao_clinica:listar_medicos' %}"
-                class="botao-secundario"
-            >
-                Cancelar
-            </a>
 
-        </form>
 
-    </section>
+        <button
+            type="submit"
+            class="botao-primario"
+        >
+            Cadastrar médico
+        </button>
+
+
+        <a
+            href="{% url 'gestao_clinica:listar_medicos' %}"
+            class="botao-secundario"
+        >
+            Cancelar
+        </a>
+
+    </form>
 
 </div>
 

@@ -48,23 +48,12 @@ Informações completas do médico
             </span>
 
             <span class="valor-perfil">
-                {{ medico.user.get_full_name }}
+                {{ medico.nome }}
             </span>
 
         </div>
 
 
-        <div class="item-perfil">
-
-            <span class="rotulo-perfil">
-                Username
-            </span>
-
-            <span class="valor-perfil">
-                {{ medico.user.username }}
-            </span>
-
-        </div>
 
 
         <div class="item-perfil">
@@ -74,7 +63,7 @@ Informações completas do médico
             </span>
 
             <span class="valor-perfil">
-                {{ medico.user.email }}
+                {{ medico.email }}
             </span>
 
         </div>
@@ -155,7 +144,7 @@ Informações completas do médico
 
     <div style="display:flex; gap:12px; margin-top:30px;">
 
-        <a href="{% url 'gestao_clinica:editar_medico' medico.id %}"
+        <a href="{% url 'gestao_clinica:atualizar_medico' medico.id %}"
            class="botao-secundario botao-editar">
 
             Atualizar Médico

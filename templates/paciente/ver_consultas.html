@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados</title>
-    <link rel="stylesheet" href="{% static 'styles/estilos.css' %}">
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
 </head>
 <body>
       <!-- BARRA LATERAL: navegação entre páginas -->
@@ -53,7 +53,7 @@
             </span>
 
             <span class="subtitulo-registro">
-                {{ consulta.data_consulta|date:"d/m/Y" }} • {{ exame.get_status_display }}
+                {{ consulta.data|date:"d/m/Y" }} • {{ exame.get_status_display }}
             </span>
         </div>
 

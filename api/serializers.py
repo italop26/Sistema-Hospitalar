@@ -1,6 +1,8 @@
 from rest_framework import serializers
+
 from core.models_consulta import Consulta
 from core.models_exames import Exame
+
 
 class ConsultaSerializer(serializers.ModelSerializer):
 
@@ -10,9 +12,9 @@ class ConsultaSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "paciente",
-            "especialidade",
+            "tipo_consulta",
             "medico",
-            "data_consulta",
+            "data",
             "status",
         ]
 
@@ -32,8 +34,9 @@ class ExameSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "paciente",
-            "data_exame",
+            "data",
             "tipo_exame",
+            "especialidade",
             "medico",
             "status",
         ]

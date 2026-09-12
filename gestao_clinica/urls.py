@@ -134,5 +134,25 @@ urlpatterns = [
 
     #Detalhes
     path('detalhe_gestor/<int:gestor_id>/', views.detalhe_gestor, name='detalhe_gestor'),
-    path('detalhe_medico/<int:medico_id>/', views.detalhe_medico, name='detalhe_medico')
+    path('detalhe_medico/<int:medico_id>/', views.detalhe_medico, name='detalhe_medico'),
+
+    path(
+        'pacientes/',
+        views.pacientes,
+        name='pacientes'
+    ),
+
+    path('registros_salvos/', views.registros, name='registros'),
+
+    path(
+    'consultas/<int:consulta_id>/status/',
+    views.alterar_status_consulta,
+    name='alterar_status_consulta'
+    ),
+
+    path(
+    'exames/<int:exame_id>/status/',
+    views.alterar_status_exame,
+    name='alterar_status_exame'
+    ),
 ]

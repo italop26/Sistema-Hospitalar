@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             name='Exame',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('data_exame', models.DateTimeField()),
+                ('data', models.DateTimeField()),
                 ('tipo_exame', models.CharField(max_length=100)),
                 ('resultado', models.TextField()),
                 ('paciente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pacientes.paciente')),
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             name='Consulta',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('data_consulta', models.DateTimeField()),
+                ('data', models.DateTimeField()),
                 ('medico', models.CharField(max_length=100)),
                 ('diagnostico', models.TextField()),
                 ('tratamento', models.TextField()),

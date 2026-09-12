@@ -16,8 +16,7 @@
         {% endblock %}
     </title>
 
-    <link rel="stylesheet"
-          href="{% static 'styles/estilos.css' %}">
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
 
     {% block css %}
     {% endblock %}
@@ -139,6 +138,21 @@
 
                     {% endif %}
 
+                      <!-- PACIENTES -->
+
+                    <a
+                        href="{% url 'gestao_clinica:pacientes' %}"
+                        class="item-menu"
+                    >
+
+                        <div class="icone-menu">
+                            P
+                        </div>
+
+                        Pacientes
+
+                    </a>
+
 
                     <!-- VAGAS -->
 
@@ -152,6 +166,19 @@
                         </div>
 
                         Configuração de Vagas
+
+                    </a>
+
+                    <a
+                        href="{% url 'gestao_clinica:registros' %}"
+                        class="item-menu"
+                    >   
+
+                        <div class="icone-menu">
+                            ⚙️
+                        </div>
+
+                        Registros
 
                     </a>
 

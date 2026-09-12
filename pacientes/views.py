@@ -6,7 +6,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from core.models_exames import Exame
 from core.models_consulta import Consulta
-
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from api.services.consulta_service import ConsultaService
+from api.services.exames_service import ExameService
+from datetime import datetime
+from gestao_clinica.models import HorarioMedico
+from gestao_clinica.turnos import Turno, DiaSemana
+from gestao_clinica.especialidades import TIPO_EXAME_ESPECIALIDADE
 
 
 def login_view(request):
@@ -69,33 +76,244 @@ def principal(request):
         }
     )
     
+@login_required
 def marcacao(request):
+
     paciente = request.user.paciente
+
     tipo = request.GET.get("tipo", "consulta")
 
+    # =====================================================
+    # POST — AGENDAMENTO
+    # =====================================================
+
     if request.method == "POST":
+
         tipo = request.POST.get("tipo")
 
+        # =================================================
+        # CONSULTA
+        # =================================================
+
         if tipo == "consulta":
-            Consulta.objects.create(
-                paciente=paciente,
-                especialidade=request.POST.get("especialidade"),
-                data_consulta=request.POST.get("data_consulta"),
-            )
+
+            tipo_consulta = request.POST.get("tipo_consulta")
+            data = request.POST.get("data")
+            turno = request.POST.get("turno")
+
+            try:
+
+                data = datetime.strptime(
+                    data,
+                    "%Y-%m-%d"
+                ).date()
+
+                # TipoConsulta e Especialidade possuem
+                # os mesmos valores.
+                especialidade = tipo_consulta
+
+                medico = ConsultaService.escolher_medico(
+                    especialidade=especialidade,
+                    data=data,
+                    turno=turno
+                )
+
+                if medico is None:
+
+                    messages.error(
+                        request,
+                        "Não existe médico disponível para essa consulta."
+                    )
+
+                    return redirect(
+                        f"{request.path}?tipo=consulta"
+                    )
+
+                Consulta.objects.create(
+                    paciente=paciente,
+                    tipo_consulta=tipo_consulta,
+                    especialidade=especialidade,
+                    data=data,
+                    turno=turno,
+                    medico=medico
+                )
+
+                messages.success(
+                    request,
+                    "Consulta agendada com sucesso."
+                )
+
+            except ValueError as erro:
+
+                messages.error(
+                    request,
+                    str(erro)
+                )
+
+                return redirect(
+                    f"{request.path}?tipo=consulta"
+                )
+
+        # =================================================
+        # EXAME
+        # =================================================
 
         elif tipo == "exame":
-            Exame.objects.create(
-                paciente=paciente,
-                tipo_exame=request.POST.get("tipo_exame"),
-                data_exame=request.POST.get("data_exame"),
-                descricao=request.POST.get("descricao")
-            )
+
+            tipo_exame = request.POST.get("tipo_exame")
+            data = request.POST.get("data")
+            turno = request.POST.get("turno")
+
+            try:
+
+                data = datetime.strptime(
+                    data,
+                    "%Y-%m-%d"
+                ).date()
+
+                # A especialidade NÃO é escolhida manualmente.
+                # Ela é definida pelo tipo do exame.
+                especialidade = TIPO_EXAME_ESPECIALIDADE.get(
+                    tipo_exame
+                )
+
+                if not especialidade:
+
+                    messages.error(
+                        request,
+                        "Não foi possível identificar a especialidade desse exame."
+                    )
+
+                    return redirect(
+                        f"{request.path}?tipo=exame"
+                    )
+
+                medico = ExameService.escolher_medico(
+                    tipo_exame=tipo_exame,
+                    especialidade=especialidade,
+                    data=data,
+                    turno=turno
+                )
+
+                if medico is None:
+
+                    messages.error(
+                        request,
+                        "Não existe médico disponível para esse exame."
+                    )
+
+                    return redirect(
+                        f"{request.path}?tipo=exame"
+                    )
+
+                Exame.objects.create(
+                    paciente=paciente,
+                    tipo_exame=tipo_exame,
+                    especialidade=especialidade,
+                    data=data,
+                    turno=turno,
+                    medico=medico
+                )
+
+                messages.success(
+                    request,
+                    "Exame agendado com sucesso."
+                )
+
+            except ValueError as erro:
+
+                messages.error(
+                    request,
+                    str(erro)
+                )
+
+                return redirect(
+                    f"{request.path}?tipo=exame"
+                )
 
         return redirect("principal")
 
-    return render(request, "paciente/marcacao.html", {
-        "tipo": tipo
-    })
+    # =====================================================
+    # GET — VAGAS CRIADAS PELA GESTÃO
+    # =====================================================
+
+    data_selecionada = request.GET.get("data")
+
+    consultas_disponiveis = []
+    exames_disponiveis = []
+
+    if data_selecionada:
+
+        try:
+
+            data = datetime.strptime(
+                data_selecionada,
+                "%Y-%m-%d"
+            ).date()
+
+            dias = {
+                0: "SEG",
+                1: "TER",
+                2: "QUA",
+                3: "QUI",
+                4: "SEX",
+                5: "SAB",
+                6: "DOM",
+            }
+
+            dia = dias[data.weekday()]
+
+            horarios = HorarioMedico.objects.filter(
+                dia=dia,
+                quantidade_vagas__gt=0
+            )
+
+            # ---------------------------------------------
+            # CONSULTAS
+            # ---------------------------------------------
+
+            consultas_disponiveis = horarios.filter(
+                tipo_consulta__isnull=False
+            ).exclude(
+                tipo_consulta=""
+            ).values(
+                "tipo_consulta",
+                "turno"
+            ).distinct()
+
+            # ---------------------------------------------
+            # EXAMES
+            # ---------------------------------------------
+
+            exames_disponiveis = horarios.filter(
+                tipo_exame__isnull=False
+            ).exclude(
+                tipo_exame=""
+            ).values(
+                "tipo_exame",
+                "turno"
+            ).distinct()
+
+        except ValueError:
+            pass
+
+    context = {
+        "tipo": tipo,
+
+        "data_selecionada": data_selecionada or "",
+
+        "consultas_disponiveis":
+            consultas_disponiveis,
+
+        "exames_disponiveis":
+            exames_disponiveis,
+    }
+
+    return render(
+        request,
+        "paciente/marcacao.html",
+        context
+    )
             
         
 

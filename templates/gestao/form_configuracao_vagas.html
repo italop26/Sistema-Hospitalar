@@ -1,33 +1,16 @@
 {% extends 'gestao/base.html' %}
 
 {% block title %}
-
-{% if configuracao %}
-    Atualizar Vagas
-{% else %}
-    Nova Configuração de Vagas
-{% endif %}
-
+Nova Configuração de Vagas
 {% endblock %}
-
 
 {% block titulo %}
-
-{% if configuracao %}
-    Atualizar Vagas
-{% else %}
-    Nova Configuração
-{% endif %}
-
+Nova Configuração de Vagas
 {% endblock %}
-
 
 {% block subtitulo %}
-
-Configure a quantidade de vagas por especialidade e turno.
-
+Configure as vagas disponíveis para consultas ou exames.
 {% endblock %}
-
 
 {% block content %}
 
@@ -36,54 +19,48 @@ Configure a quantidade de vagas por especialidade e turno.
     <div class="cabecalho-secao">
 
         <h2>
-
-            {% if configuracao %}
-                Editar configuração
-            {% else %}
-                Criar configuração
-            {% endif %}
-
+            Criar configuração
         </h2>
 
     </div>
 
 
-    <form method="POST"
-          class="formulario-secao">
+    <form
+        method="POST"
+        action="{% url 'gestao_clinica:criar_configuracao_vagas' %}"
+        class="formulario-secao"
+    >
 
         {% csrf_token %}
 
 
         <div class="grade-campos">
 
+
+            <!-- MÉDICO -->
+
             <div class="campo">
 
-                <label for="especialidade">
-                    Especialidade
+                <label for="medico">
+                    Médico
                 </label>
 
                 <select
-                    name="especialidade"
-                    id="especialidade"
-                    {% if configuracao %}disabled{% endif %}
+                    name="medico"
+                    id="medico"
                     required
                 >
 
                     <option value="">
-                        Selecione uma especialidade
+                        Selecione um médico
                     </option>
 
+                    {% for medico in medicos %}
 
-                    {% for valor, nome in especialidade_choices %}
+                        <option value="{{ medico.id }}">
 
-                        <option
-                            value="{{ valor }}"
-                            {% if configuracao.especialidade == valor %}
-                                selected
-                            {% endif %}
-                        >
-
-                            {{ nome }}
+                            {{ medico.nome }}
+                            — {{ medico.get_especialidade_display }}
 
                         </option>
 
@@ -91,18 +68,132 @@ Configure a quantidade de vagas por especialidade e turno.
 
                 </select>
 
-                {% if configuracao %}
+            </div>
 
-                    <input
-                        type="hidden"
-                        name="especialidade"
-                        value="{{ configuracao.especialidade }}"
-                    >
 
-                {% endif %}
+            <!-- TIPO DE ATENDIMENTO -->
+
+            <div class="campo">
+
+                <label for="tipo_atendimento">
+                    Tipo de atendimento
+                </label>
+
+                <select
+                    name="tipo_atendimento"
+                    id="tipo_atendimento"
+                    required
+                >
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="consulta">
+                        Consulta
+                    </option>
+
+                    <option value="exame">
+                        Exame
+                    </option>
+
+                </select>
 
             </div>
 
+
+            <!-- TIPO DE CONSULTA -->
+
+            <div class="campo">
+
+                <label for="tipo_consulta">
+                    Tipo de consulta
+                </label>
+
+                <select
+                    name="tipo_consulta"
+                    id="tipo_consulta"
+                >
+
+                    <option value="">
+                        Selecione o tipo de consulta
+                    </option>
+
+                    {% for valor, nome in tipo_consulta_choices %}
+
+                        <option value="{{ valor }}">
+                            {{ nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- TIPO DE EXAME -->
+
+            <div class="campo">
+
+                <label for="tipo_exame">
+                    Tipo de exame
+                </label>
+
+                <select
+                    name="tipo_exame"
+                    id="tipo_exame"
+                >
+
+                    <option value="">
+                        Selecione o tipo de exame
+                    </option>
+
+                    {% for valor, nome in tipo_exame_choices %}
+
+                        <option value="{{ valor }}">
+                            {{ nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- DIA -->
+
+            <div class="campo">
+
+                <label for="dia">
+                    Dia
+                </label>
+
+                <select
+                    name="dia"
+                    id="dia"
+                    required
+                >
+
+                    <option value="">
+                        Selecione um dia
+                    </option>
+
+                    {% for valor, nome in dia_choices %}
+
+                        <option value="{{ valor }}">
+                            {{ nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- TURNO -->
 
             <div class="campo">
 
@@ -113,7 +204,6 @@ Configure a quantidade de vagas por especialidade e turno.
                 <select
                     name="turno"
                     id="turno"
-                    {% if configuracao %}disabled{% endif %}
                     required
                 >
 
@@ -121,36 +211,20 @@ Configure a quantidade de vagas por especialidade e turno.
                         Selecione um turno
                     </option>
 
-
                     {% for valor, nome in turno_choices %}
 
-                        <option
-                            value="{{ valor }}"
-                            {% if configuracao.turno == valor %}
-                                selected
-                            {% endif %}
-                        >
-
+                        <option value="{{ valor }}">
                             {{ nome }}
-
                         </option>
 
                     {% endfor %}
 
                 </select>
 
-                {% if configuracao %}
-
-                    <input
-                        type="hidden"
-                        name="turno"
-                        value="{{ configuracao.turno }}"
-                    >
-
-                {% endif %}
-
             </div>
 
+
+            <!-- VAGAS -->
 
             <div class="campo completo">
 
@@ -163,21 +237,21 @@ Configure a quantidade de vagas por especialidade e turno.
                     name="quantidade_vagas"
                     id="quantidade_vagas"
                     min="0"
-                    value="{{ configuracao.quantidade_vagas|default:'' }}"
+                    max="50"
                     required
                 >
 
                 <span class="dica">
-
                     Informe quantas vagas estarão disponíveis
-                    para essa especialidade nesse turno.
-
+                    para esse atendimento.
                 </span>
 
             </div>
 
         </div>
 
+
+        <!-- BOTÕES -->
 
         <div style="
             display:flex;
@@ -189,13 +263,7 @@ Configure a quantidade de vagas por especialidade e turno.
                 type="submit"
                 class="botao-secundario botao-editar"
             >
-
-                {% if configuracao %}
-                    Salvar alterações
-                {% else %}
-                    Criar configuração
-                {% endif %}
-
+                Criar configuração
             </button>
 
 
@@ -203,9 +271,7 @@ Configure a quantidade de vagas por especialidade e turno.
                 href="{% url 'gestao_clinica:listar_configuracao_vagas' %}"
                 class="botao-secundario"
             >
-
                 Cancelar
-
             </a>
 
         </div>

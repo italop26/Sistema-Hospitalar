@@ -1635,3 +1635,150 @@ textarea{
     font-weight: 700;
     color: #111827;
 }
+
+/* =====================================================
+       INFORMAÇÕES ADICIONAIS 
+    ===================================================== */
+
+/* =====================================================
+   AÇÕES RÁPIDAS
+===================================================== */
+
+.acoes-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 20px 0 28px;
+}
+
+.botao-dashboard {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 14px 16px;
+    border-radius: 13px;
+    text-decoration: none;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    transition: 0.2s ease;
+}
+
+.botao-dashboard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+}
+
+.icone-botao {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f1f5f9;
+    font-size: 19px;
+}
+
+.conteudo-botao {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.conteudo-botao strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+.conteudo-botao span {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.seta-botao {
+    font-size: 17px;
+    color: #6b7280;
+}
+
+
+/* =====================================================
+   MENSAGENS VAZIAS
+===================================================== */
+
+.mensagem-vazia {
+    margin-top: 5px;
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+
+/* =====================================================
+   RESUMO DOS REGISTROS
+===================================================== */
+
+.resumo-dia {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+}
+
+.mini-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+
+/* =====================================================
+   DIAS DO ACOMPANHAMENTO
+===================================================== */
+
+.dia-acompanhamento {
+    display: none;
+}
+
+.dia-acompanhamento:target {
+    display: block;
+}
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .acoes-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+.status-andamento{
+
+    background:#ffedd5;
+
+    color:#ea580c;
+
+}
+
+.status-adiado{
+
+    background:#fef3c7;
+
+    color:#d97706;
+
+}
+
+.status-analise{
+
+    background:#ede9fe;
+
+    color:#7c3aed;
+
+}

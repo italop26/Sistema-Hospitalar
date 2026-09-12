@@ -9,7 +9,7 @@ Configuração de Vagas
 {% endblock %}
 
 {% block subtitulo %}
-Gerencie a quantidade de vagas por especialidade e turno.
+Gerencie as vagas cadastradas para consultas e exames.
 {% endblock %}
 
 {% block content %}
@@ -19,18 +19,23 @@ Gerencie a quantidade de vagas por especialidade e turno.
     <div class="cabecalho-secao">
 
         <div>
-            <h2>Vagas configuradas</h2>
+
+            <h2>
+                Vagas configuradas
+            </h2>
 
             <p class="subtitulo" style="margin:5px 0 0;">
-                Controle a quantidade disponível para cada especialidade.
+                Controle a quantidade disponível para cada atendimento.
             </p>
+
         </div>
 
-        <a href="{% url 'gestao_clinica:criar_configuracao_vagas' %}"
-           class="botao-secundario botao-editar">
 
+        <a
+            href="{% url 'gestao_clinica:criar_configuracao_vagas' %}"
+            class="botao-secundario botao-editar"
+        >
             + Nova configuração
-
         </a>
 
     </div>
@@ -46,15 +51,65 @@ Gerencie a quantidade de vagas por especialidade e turno.
 
                     <div class="info-registro">
 
+
+                        <!-- MÉDICO -->
+
                         <span class="titulo-registro">
 
-                            {{ configuracao.especialidade }}
+                            {{ configuracao.medico.nome }}
 
                         </span>
 
+
+                        <!-- TIPO -->
+
+                        {% if configuracao.tipo_consulta %}
+
+                            <span class="subtitulo-registro">
+
+                                Consulta:
+
+                                {{ configuracao.get_tipo_consulta_display }}
+
+                            </span>
+
+                        {% elif configuracao.tipo_exame %}
+
+                            <span class="subtitulo-registro">
+
+                                Exame:
+
+                                {{ configuracao.get_tipo_exame_display }}
+
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- ESPECIALIDADE -->
+
                         <span class="subtitulo-registro">
 
-                            Turno: {{ configuracao.turno }}
+                            Especialidade:
+
+                            {{ configuracao.get_especialidade_display }}
+
+                        </span>
+
+
+                        <!-- DIA E TURNO -->
+
+                        <span class="subtitulo-registro">
+
+                            Dia:
+
+                            {{ configuracao.get_dia_display }}
+
+                            •
+
+                            Turno:
+
+                            {{ configuracao.get_turno_display }}
 
                         </span>
 
@@ -67,6 +122,9 @@ Gerencie a quantidade de vagas por especialidade e turno.
                         gap:20px;
                         flex-wrap:wrap;
                     ">
+
+
+                        <!-- VAGAS -->
 
                         <div>
 
@@ -83,20 +141,29 @@ Gerencie a quantidade de vagas por especialidade e turno.
                         </div>
 
 
-                        <a href="{% url 'gestao_:atualizar_configuracao_vagas' configuracao.id %}"
-                           class="botao-secundario botao-editar">
+                        <!-- AÇÕES -->
 
-                            Editar
+                        <div style="
+                            display:flex;
+                            gap:10px;
+                        ">
 
-                        </a>
+                            <a
+                                href="{% url 'gestao_clinica:atualizar_configuracao_vagas' configuracao.id %}"
+                                class="botao-secundario botao-editar"
+                            >
+                                Editar
+                            </a>
 
 
-                        <a href="{% url 'gestao:excluir_configuracao_vagas' configuracao.id %}"
-                           class="botao-secundario botao-excluir">
+                            <a
+                                href="{% url 'gestao_clinica:excluir_configuracao_vagas' configuracao.id %}"
+                                class="botao-secundario botao-excluir"
+                            >
+                                Excluir
+                            </a>
 
-                            Excluir
-
-                        </a>
+                        </div>
 
                     </div>
 
@@ -105,6 +172,7 @@ Gerencie a quantidade de vagas por especialidade e turno.
             {% endfor %}
 
         </div>
+
 
     {% else %}
 

@@ -1,18 +1,29 @@
 from django.db import transaction
+import random
+
 from core.models_consulta import Consulta
 from medico.models import Medico
-import random
+from gestao_clinica.models import HorarioMedico
 
 
 class ConsultaService:
 
     @staticmethod
     @transaction.atomic
-    def criar_consulta(*, paciente, especialidade, data):
+    def criar_consulta(
+        *,
+        paciente,
+        tipo_consulta,
+        especialidade,
+        data,
+        turno
+    ):
 
-        medico = ConsultaService.selecionar_medico(
+        medico = ConsultaService.escolher_medico(
+            tipo_consulta=tipo_consulta,
             especialidade=especialidade,
-            data_consulta=data
+            data=data,
+            turno=turno
         )
 
         if medico is None:
@@ -22,71 +33,132 @@ class ConsultaService:
 
         consulta = Consulta.objects.create(
             paciente=paciente,
+            tipo_consulta=tipo_consulta,
             especialidade=especialidade,
-            medico=medico.nome,
-            data_consulta=data,
+            medico=medico,
+            data=data,
+            turno=turno
         )
 
         return consulta
 
-@staticmethod
-def escolher_medico(*, especialidade, data):
+    @staticmethod
+    def escolher_medico(
+        *,
+        tipo_consulta,
+        especialidade,
+        data,
+        turno
+    ):
 
-    # 1. Busca todos os médicos da especialidade.
-    medicos = Medico.objects.filter(
-        especialidade=especialidade
-    )
+        # ==========================================
+        # CONVERTE DATA → DIA DA SEMANA
+        # ==========================================
 
-    if not medicos.exists():
-        return None
+        dias = {
+            0: "SEG",
+            1: "TER",
+            2: "QUA",
+            3: "QUI",
+            4: "SEX",
+            5: "SAB",
+            6: "DOM",
+        }
 
-        # 2. Verifica quantas consultas cada médico possui.
-    candidatos = []
+        dia = dias[data.weekday()]
 
-    for medico in medicos:
-        ocupado = Consulta.objects.filter(
-        medico=medico.nome,
-        data=data
-    ).exists()
+        # ==========================================
+        # BUSCA AS VAGAS CRIADAS PELA GESTÃO
+        # ==========================================
 
-        if ocupado:
-            continue 
+        configuracoes = HorarioMedico.objects.filter(
+            tipo_consulta=tipo_consulta,
+            especialidade=especialidade,
+            dia=dia,
+            turno=turno,
+            quantidade_vagas__gt=0,
+            medico__ativo=True
+        ).select_related("medico")
 
-    quantidade_consultas = Consulta.objects.filter(
-        medico=medico.nome
-        ).count()
+        # Não existe vaga configurada
+        if not configuracoes.exists():
+            return None
 
-    candidatos.append({
-    "medico": medico,
-    "consultas": quantidade_consultas,
-})
+        candidatos = []
 
-# 3. Descobre o menor número de consultas.
-    menor_quantidade = min(
-    candidato["consultas"]
-    for candidato in candidatos
-)
+        # ==========================================
+        # ANALISA CADA MÉDICO
+        # ==========================================
 
-    candidatos = [
-    candidato
-    for candidato in candidatos
-    if candidato["consultas"] == menor_quantidade
-]
+        for configuracao in configuracoes:
 
-# 4. Se ainda houver empate,
-# verifica quem possui mais vagas.
-    maior_disponibilidade = max(
-    candidato["medico"].quantidade_vagas
-    for candidato in candidatos
-)
+            medico = configuracao.medico
 
-    candidatos = [
-    candidato
-    for candidato in candidatos
-    if candidato["medico"].quantidade_vagas == maior_disponibilidade
-]
+            # Quantidade de consultas desse médico
+            # nesse dia e nesse turno
+            quantidade_consultas = Consulta.objects.filter(
+                medico=medico,
+                data__date=data,
+                turno=turno
+            ).count()
 
-# 5. Se ainda houver empate,
-# escolhe aleatoriamente.
-    escolhido = random.choice(candidatos)
-    return escolhido["medico"]
+            # ======================================
+            # VERIFICA LIMITE DE VAGAS
+            # ======================================
+
+            if quantidade_consultas >= configuracao.quantidade_vagas:
+                continue
+
+            candidatos.append({
+                "medico": medico,
+                "consultas": quantidade_consultas,
+                "vagas": configuracao.quantidade_vagas
+            })
+
+        # ==========================================
+        # NENHUM MÉDICO DISPONÍVEL
+        # ==========================================
+
+        if not candidatos:
+            return None
+
+        # ==========================================
+        # 1º CRITÉRIO
+        # MÉDICO COM MENOS CONSULTAS
+        # ==========================================
+
+        menor_quantidade = min(
+            candidato["consultas"]
+            for candidato in candidatos
+        )
+
+        candidatos = [
+            candidato
+            for candidato in candidatos
+            if candidato["consultas"] == menor_quantidade
+        ]
+
+        # ==========================================
+        # 2º CRITÉRIO
+        # MÉDICO COM MAIS VAGAS CONFIGURADAS
+        # ==========================================
+
+        maior_quantidade_vagas = max(
+            candidato["vagas"]
+            for candidato in candidatos
+        )
+
+        candidatos = [
+            candidato
+            for candidato in candidatos
+            if candidato["vagas"] == maior_quantidade_vagas
+        ]
+
+        # ==========================================
+        # 3º CRITÉRIO
+        # EMPATE → ALEATÓRIO
+        # ==========================================
+
+        escolhido = random.choice(candidatos)
+
+        return escolhido["medico"]

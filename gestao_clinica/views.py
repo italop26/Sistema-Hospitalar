@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from gestao_clinica import choices
-from gestao_clinica.especialidades import Especialidade
-from .models import ConfiguracaoVagas
-from .models import Gestor
-from gestao_clinica.turnos import Turno
+from gestao_clinica.choices import Status 
+from gestao_clinica.especialidades import Especialidade, TipoConsulta, TipoExame
+from .models import Gestor, TipoExame, HorarioMedico
+from gestao_clinica.especialidades import TIPO_EXAME_ESPECIALIDADE
+from gestao_clinica.turnos import Turno, DiaSemana
 from django.contrib.auth.models import User
 from medico.models import Medico
 from .models import Especialidade
@@ -21,6 +20,7 @@ from pacientes.models import Paciente
 from core.models_consulta import Consulta
 from core.models_exames import Exame
 from api.autenticaçao.jwt import gerar_token
+
 #Login do adm 
 
 
@@ -156,29 +156,46 @@ def dashboard(request):
     agora = timezone.localtime()
     hoje = agora.date()
 
-    # Período do dashboard
+    # =====================================================
+    # PERÍODO DO DASHBOARD
+    # =====================================================
+
     data_inicial = hoje - timedelta(days=5)
     data_final = hoje + timedelta(days=4)
 
     consultas = (
         Consulta.objects
-        .filter(data__range=(data_inicial, data_final))
+        .filter(data__date__range=(data_inicial, data_final))
         .select_related("paciente")
         .order_by("data")
     )
 
     exames = (
         Exame.objects
-        .filter(data__range=(data_inicial, data_final))
+        .filter(data__date__range=(data_inicial, data_final))
         .select_related("paciente")
         .order_by("data")
     )
 
-    # Quantidades
-    consultas_de_hoje = Consulta.objects.filter(data=hoje).count()
-    exames_de_hoje = Exame.objects.filter(data=hoje).count()
-    total_medicos = Medico.objects.count()
+    # =====================================================
+    # QUANTIDADES
+    # =====================================================
+
     total_pacientes = Paciente.objects.count()
+    total_medicos = Medico.objects.count()
+    total_gestores = Gestor.objects.count()
+
+    consultas_de_hoje = Consulta.objects.filter(
+        data__date=hoje
+    ).count()
+
+    exames_de_hoje = Exame.objects.filter(
+        data__date=hoje
+    ).count()
+
+    # =====================================================
+    # DIAS DO DASHBOARD
+    # =====================================================
 
     dias = []
 
@@ -201,21 +218,35 @@ def dashboard(request):
         dias.append({
             "data": data_atual,
             "hoje": data_atual == hoje,
+
             "consultas": consultas_do_dia,
             "exames": exames_do_dia,
-            "total": len(consultas_do_dia) + len(exames_do_dia),
+
+            "total_consultas": len(consultas_do_dia),
+            "total_exames": len(exames_do_dia),
+
+            "total": (
+                len(consultas_do_dia)
+                + len(exames_do_dia)
+            ),
         })
 
         data_atual += timedelta(days=1)
 
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
+
     context = {
         "dias": dias,
+
         "data_inicial": data_inicial,
         "data_final": data_final,
         "hoje": hoje,
 
         "pacientes": total_pacientes,
         "medicos": total_medicos,
+        "gestores": total_gestores,
 
         "consultas_de_hoje": consultas_de_hoje,
         "exames_de_hoje": exames_de_hoje,
@@ -224,6 +255,85 @@ def dashboard(request):
     return render(
         request,
         "gestao/dashbord.html",
+        context
+    )
+@login_required
+def criar_medico(request):
+
+    if request.method == "POST":
+
+        nome = request.POST.get("nome")
+        email = request.POST.get("email")
+        idade = request.POST.get("idade")
+        crm = request.POST.get("crm")
+        cpf = request.POST.get("cpf")
+        especialidade = request.POST.get("especialidade")
+
+        exames = request.POST.getlist("exames")
+
+        if not all([
+            nome,
+            idade,
+            crm,
+            cpf,
+            especialidade,
+            email
+        ]):
+            messages.error(
+                request,
+                "Preencha todos os campos obrigatórios."
+            )
+            return redirect(
+                "gestao_clinica:criar_medico"
+            )
+
+
+        if Medico.objects.filter(crm=crm).exists():
+            messages.error(
+                request,
+                "Já existe um médico com esse CRM."
+            )
+            return redirect(
+                "gestao_clinica:criar_medico"
+            )
+
+        user = User.objects.create_user(
+            username=crm,
+            password=request.POST.get("senha"),
+        )
+
+        medico = Medico.objects.create(
+            user=user,
+            nome=nome,
+            idade=idade,
+            email=email,
+            crm=crm,
+            cpf=cpf,
+            especialidade=especialidade,
+            exames=exames
+        )
+
+        # Cria as combinações de dia + turno
+
+        messages.success(
+            request,
+            f"Médico {nome} cadastrado com sucesso."
+        )
+
+        return redirect(
+            "gestao_clinica:listar_medicos"
+        )
+
+    context = {
+        "especialidade_choices": Especialidade.choices,
+        "turno_choices": Turno.choices,
+        "dia_choices": DiaSemana.choices,
+        "exame_choices": TipoExame.choices,
+    }
+
+    return render(
+        request,
+        "gestao/criar_medico.html",
         context
     )
 
@@ -277,77 +387,133 @@ def listar_medicos(request):
     )
 
 
-
 @login_required
-def criar_medico(request):
+def atualizar_medico(request, medico_id):
+
+    medico = get_object_or_404(
+        Medico.objects.select_related('user'),
+        id=medico_id
+    )
+
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
+
+        nome = request.POST.get('nome')
         email = request.POST.get('email')
-        username = request.POST.get('username')
         idade = request.POST.get('idade')
         crm = request.POST.get('crm')
         cpf = request.POST.get('cpf')
         especialidade = request.POST.get('especialidade')
 
-        if not all([first_name, username, idade, crm, cpf, especialidade]):
-            messages.error(request, 'Preencha todos os campos obrigatórios.')
-            return redirect('gestao_clinica:criar_medico')
+        dias = request.POST.getlist('dias')
+        turnos = request.POST.getlist('turnos')
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Já existe um usuário com esse username.')
-            return redirect('gestao_clinica:criar_medico')
+        if not all([
+            nome,
+            email,
+            idade,
+            crm,
+            cpf,
+            especialidade
+        ]):
+            messages.error(
+                request,
+                'Preencha todos os campos obrigatórios.'
+            )
+            return redirect(
+                'gestao_clinica:editar_medico',
+                medico_id=medico.id
+            )
 
-        if Medico.objects.filter(crm=crm).exists():
-            messages.error(request, 'Já existe um médico com esse CRM.')
-            return redirect('gestao_clinica:criar_medico')
+        if not dias:
+            messages.error(
+                request,
+                'Selecione pelo menos um dia de atendimento.'
+            )
+            return redirect(
+                'gestao_clinica:editar_medico',
+                medico_id=medico.id
+            )
 
-        user = User.objects.create_user(
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-        )
+        if not turnos:
+            messages.error(
+                request,
+                'Selecione pelo menos um turno de atendimento.'
+            )
+            return redirect(
+                'gestao_clinica:editar_medico',
+                medico_id=medico.id
+            )
 
-        Medico.objects.create(
-            user=user,
-            idade=idade,
-            crm=crm,
-            cpf=cpf,
-            especialidade=especialidade,
-        )
-
-        messages.success(request, f'Médico {first_name} cadastrado com sucesso.')
-        return redirect('gestao_clinica:listar_medicos')
-
-    context = {'especialidade_choices': Especialidade.choices}
-    return render(request, 'gestao/criar_medico.html', context)
-
-
-@login_required
-def atualizar_medico(request, medico_id):
-    medico = get_object_or_404(Medico.objects.select_related('user'), id=medico_id)
-
-    if request.method == 'POST':
-        medico.user.first_name = request.POST.get('first_name', medico.user.first_name)
-        medico.user.last_name = request.POST.get('last_name', medico.user.last_name)
-        medico.user.email = request.POST.get('email', medico.user.email)
+        # Atualiza User
+        medico.user.email = email
         medico.user.save()
 
-        medico.idade = request.POST.get('idade', medico.idade)
-        medico.crm = request.POST.get('crm', medico.crm)
-        medico.cpf = request.POST.get('cpf', medico.cpf)
-        medico.especialidade = request.POST.get('especialidade', medico.especialidade)
+        # Atualiza Médico
+        medico.nome = nome
+        medico.idade = idade
+        medico.crm = crm
+        medico.cpf = cpf
+        medico.especialidade = especialidade
         medico.save()
 
-        messages.success(request, 'Dados do médico atualizados.')
-        return redirect('gestao_clinica:listar_medicos')
+        # Remove os horários antigos
+        HorarioMedico.objects.filter(
+            medico=medico
+        ).delete()
+
+        # Cria novamente as combinações escolhidas
+        for dia in dias:
+            for turno in turnos:
+
+                HorarioMedico.objects.create(
+                    medico=medico,
+                    dia=dia,
+                    turno=turno
+                )
+
+        messages.success(
+            request,
+            'Dados do médico atualizados com sucesso.'
+        )
+
+        return redirect(
+            'gestao_clinica:listar_medicos'
+        )
+
+    # Horários atuais do médico
+    horarios = HorarioMedico.objects.filter(
+        medico=medico
+    )
+
+    dias_medico = horarios.values_list(
+        'dia',
+        flat=True
+    ).distinct()
+
+    turnos_medico = horarios.values_list(
+        'turno',
+        flat=True
+    ).distinct()
 
     context = {
         'medico': medico,
+
         'especialidade_choices': Especialidade.choices,
+
+        'dia_choices': DiaSemana.choices,
+
+        'turno_choices': Turno.choices,
+
+        'dias_medico': list(dias_medico),
+
+        'turnos_medico': list(turnos_medico),
     }
-    return render(request, 'gestao_clinica/listar_medicos.html', context)
+
+    return render(
+        request,
+        'gestao/atualizar_medico.html',
+        context
+    )
 
 @login_required
 def excluir_medico(request, medico_id):
@@ -454,87 +620,409 @@ def gerenciar_atendimentos(request, paciente_id):
 
 
 
-# ---------- CONFIGURAÇÃO DE VAGAS/TURNO ----------
+# ---------- HISTORICOS ----------
 @login_required
-def registros(request, paciente_id):
-    paciente = get_object_or_404(Paciente, id=paciente_id)
-    consultas = Consulta.objects.filter(paciente=paciente).order_by('-data')
-    exames = Exame.objects.filter(paciente=paciente).order_by('-data')
+def registros(request):
 
-    context = {'consultas': consultas, 'exames': exames}
-    return render (request, 'gestao/registros.html', context)
+    consultas = (
+    Consulta.objects
+    .select_related('paciente', 'medico')
+    .order_by('-data')
+)
+
+    exames = (
+    Exame.objects
+    .select_related('paciente', 'medico')
+    .order_by('-data')
+)
+
+    context = {
+    'consultas': consultas,
+    'exames': exames,
+}
+
+    return render(
+    request,
+    'gestao/registros.html',
+    context
+)
+
+@login_required
+def alterar_status_consulta(request, consulta_id):
+
+    consulta = get_object_or_404(
+        Consulta,
+        id=consulta_id
+    )
+
+    if request.method == 'POST':
+
+        consulta.status = request.POST.get('status')
+        consulta.save()
+
+        return redirect('gestao_clinica:registros')
+
+    context = {
+        'registro': consulta,
+        'status_choices': Status.choices,
+    }
+
+    return render(
+        request,
+        'gestao/alterar_status.html',
+        context
+    )
+
+@login_required
+def alterar_status_exame(request, exame_id):
+
+    exame = get_object_or_404(
+        Exame,
+        id=exame_id
+    )
+
+    if request.method == 'POST':
+
+        exame.status = request.POST.get('status')
+        exame.save()
+
+        return redirect('gestao_clinica:registros')
+
+    context = {
+        'registro': exame,
+        'status_choices': Status.choices,
+    }
+
+    return render(
+        request,
+        'gestao/alterar_status.html',
+        context
+    )
+
 
     
-
+# ---------- CONFIGURAÇÃO DE VAGAS/TURNO ----------
 @login_required
 def vagas_disponiveis(request):
-    configuracoes = ConfiguracaoVagas.objects.all().order_by('especialidade', 'turno')
-    context = {'configuracoes': configuracoes}
-    return render(request, 'gestao/listar_configuracao_vagas.html', context)
+
+    configuracoes = (
+        HorarioMedico.objects
+        .select_related("medico")
+        .order_by(
+            "dia",
+            "turno",
+            "tipo_consulta",
+            "tipo_exame"
+        )
+    )
+
+    return render(
+        request,
+        "gestao/listar_configuracao_vagas.html",
+        {
+            "configuracoes": configuracoes
+        }
+    )
 
 
 @login_required
 def criar_vagas(request):
-    if request.method == 'POST':
-        especialidade = request.POST.get('especialidade')
-        turno = request.POST.get('turno')
-        quantidade = request.POST.get('quantidade_vagas')
 
-        if not (especialidade and turno and quantidade):
-            messages.error(request, 'Preencha todos os campos.')
-            return redirect('gestao:criar_configuracao_vagas')
+    medicos = Medico.objects.filter(
+        ativo=True
+    )
 
-        if ConfiguracaoVagas.objects.filter(especialidade=especialidade, turno=turno).exists():
-            messages.error(request, 'Já existe configuração para essa especialidade e turno.')
-            return redirect('gestao:criar_configuracao_vagas')
+    if request.method == "POST":
 
-        ConfiguracaoVagas.objects.create(
-            especialidade=especialidade,
-            turno=turno,
-            quantidade_vagas=quantidade
+        medico_id = request.POST.get("medico")
+        tipo_atendimento = request.POST.get("tipo_atendimento")
+
+        tipo_consulta = request.POST.get("tipo_consulta")
+        tipo_exame = request.POST.get("tipo_exame")
+
+        dia = request.POST.get("dia")
+        turno = request.POST.get("turno")
+        quantidade_vagas = request.POST.get("quantidade_vagas")
+
+        medico = get_object_or_404(
+            Medico,
+            id=medico_id,
+            ativo=True
         )
-        messages.success(request, 'Configuração de vagas criada com sucesso.')
-        return redirect('gestao:listar_configuracao_vagas')
+
+        # -----------------------------------------
+        # VALIDAÇÃO DO TIPO
+        # -----------------------------------------
+
+        if tipo_atendimento not in ["consulta", "exame"]:
+
+            messages.error(
+                request,
+                "Selecione se a configuração é para consulta ou exame."
+            )
+
+            return redirect(
+                "gestao_clinica:criar_configuracao_vagas"
+            )
+
+        # -----------------------------------------
+        # CONSULTA
+        # -----------------------------------------
+
+        if tipo_atendimento == "consulta":
+
+            if not tipo_consulta:
+
+                messages.error(
+                    request,
+                    "Selecione o tipo de consulta."
+                )
+
+                return redirect(
+                    "gestao_clinica:criar_configuracao_vagas"
+                )
+
+            tipo_exame = None
+
+            # A especialidade vem do médico
+            especialidade = medico.especialidade
+
+        # -----------------------------------------
+        # EXAME
+        # -----------------------------------------
+
+        else:
+
+            if not tipo_exame:
+
+                messages.error(
+                    request,
+                    "Selecione o tipo de exame."
+                )
+
+                return redirect(
+                    "gestao_clinica:criar_configuracao_vagas"
+                )
+
+            tipo_consulta = None
+
+            # A especialidade vem do médico
+            especialidade = medico.especialidade
+
+        # -----------------------------------------
+        # CRIA CONFIGURAÇÃO
+        # -----------------------------------------
+
+        HorarioMedico.objects.create(
+            medico=medico,
+            especialidade=especialidade,
+            tipo_consulta=tipo_consulta,
+            tipo_exame=tipo_exame,
+            dia=dia,
+            turno=turno,
+            quantidade_vagas=quantidade_vagas
+        )
+
+        messages.success(
+            request,
+            "Configuração de vagas criada com sucesso."
+        )
+
+        return redirect(
+            "gestao_clinica:listar_configuracao_vagas"
+        )
 
     context = {
-        'especialidade_choices': Especialidade.choices,
-        'turno_choices': Turno.choices,
-    }
-    return render(request, 'gestao/form_configuracao_vagas.html', context)
+        "medicos": medicos,
 
+        "tipo_consulta_choices":
+            TipoConsulta.choices,
+
+        "tipo_exame_choices":
+            TipoExame.choices,
+
+        "dia_choices":
+            DiaSemana.choices,
+
+        "turno_choices":
+            Turno.choices,
+    }
+
+    return render(
+        request,
+        "gestao/form_configuracao_vagas.html",
+        context
+    )
 
 @login_required
 def atualizar_vagas_disponivies(request, config_id):
-    configuracao = get_object_or_404(ConfiguracaoVagas, id=config_id)
 
-    if request.method == 'POST':
-        quantidade = request.POST.get('quantidade_vagas')
+    configuracao = get_object_or_404(
+        HorarioMedico,
+        id=config_id
+    )
 
-        if not quantidade:
-            messages.error(request, 'Informe a quantidade de vagas.')
-            return redirect('gestao:atualizar_configuracao_vagas', config_id=config_id)
+    medicos = Medico.objects.filter(
+        ativo=True
+    )
 
-        configuracao.quantidade_vagas = quantidade
+    if request.method == "POST":
+
+        medico_id = request.POST.get("medico")
+        tipo_atendimento = request.POST.get("tipo_atendimento")
+
+        tipo_consulta = request.POST.get("tipo_consulta")
+        tipo_exame = request.POST.get("tipo_exame")
+
+        dia = request.POST.get("dia")
+        turno = request.POST.get("turno")
+        quantidade_vagas = request.POST.get("quantidade_vagas")
+
+        medico = get_object_or_404(
+            Medico,
+            id=medico_id,
+            ativo=True
+        )
+
+        # -----------------------------------------
+        # VALIDAÇÃO DO TIPO
+        # -----------------------------------------
+
+        if tipo_atendimento not in ["consulta", "exame"]:
+
+            messages.error(
+                request,
+                "Selecione se a configuração é para consulta ou exame."
+            )
+
+            return redirect(
+                "gestao_clinica:atualizar_configuracao_vagas",
+                config_id=config_id
+            )
+
+        # -----------------------------------------
+        # CONSULTA
+        # -----------------------------------------
+
+        if tipo_atendimento == "consulta":
+
+            if not tipo_consulta:
+
+                messages.error(
+                    request,
+                    "Selecione o tipo de consulta."
+                )
+
+                return redirect(
+                    "gestao_clinica:atualizar_configuracao_vagas",
+                    config_id=config_id
+                )
+
+            tipo_exame = None
+
+        # -----------------------------------------
+        # EXAME
+        # -----------------------------------------
+
+        else:
+
+            if not tipo_exame:
+
+                messages.error(
+                    request,
+                    "Selecione o tipo de exame."
+                )
+
+                return redirect(
+                    "gestao_clinica:atualizar_configuracao_vagas",
+                    config_id=config_id
+                )
+
+            tipo_consulta = None
+
+        # -----------------------------------------
+        # ESPECIALIDADE VEM DO MÉDICO
+        # -----------------------------------------
+
+        configuracao.medico = medico
+        configuracao.especialidade = medico.especialidade
+
+        configuracao.tipo_consulta = tipo_consulta
+        configuracao.tipo_exame = tipo_exame
+
+        configuracao.dia = dia
+        configuracao.turno = turno
+        configuracao.quantidade_vagas = quantidade_vagas
+
         configuracao.save()
-        messages.success(request, 'Quantidade de vagas atualizada.')
-        return redirect('gestao:listar_configuracao_vagas')
 
-    context = {'configuracao': configuracao}
-    return render(request, 'gestao/form_configuracao_vagas.html', context)
+        messages.success(
+            request,
+            "Configuração atualizada com sucesso."
+        )
 
+        return redirect(
+            "gestao_clinica:listar_configuracao_vagas"
+        )
+
+    # Descobre qual tipo está configurado
+    if configuracao.tipo_consulta:
+        tipo_atendimento = "consulta"
+    elif configuracao.tipo_exame:
+        tipo_atendimento = "exame"
+    else:
+        tipo_atendimento = ""
+
+    context = {
+        "configuracao": configuracao,
+
+        "medicos": medicos,
+
+        "tipo_atendimento": tipo_atendimento,
+
+        "tipo_consulta_choices": TipoConsulta.choices,
+
+        "tipo_exame_choices": TipoExame.choices,
+
+        "turno_choices": Turno.choices,
+
+        "dia_choices": DiaSemana.choices,
+    }
+
+    return render(
+        request,
+        "gestao/form_configuracao_vagas.html",
+        context
+    )
 
 @login_required
 def excluir_vagas_disponivies(request, config_id):
-    configuracao = get_object_or_404(ConfiguracaoVagas, id=config_id)
+
+    configuracao = get_object_or_404(
+        HorarioMedico,
+        id=config_id
+    )
 
     if request.method == 'POST':
+
         configuracao.delete()
-        messages.success(request, 'Configuração removida.')
-        return redirect('gestao:listar_configuracao_vagas')
 
-    context = {'configuracao': configuracao}
-    return render(request, 'gestao/confirmar_exclusao.html', context)
+        messages.success(
+            request,
+            'Configuração removida com sucesso.'
+        )
 
+        return redirect(
+            'gestao_clinica:listar_configuracao_vagas'
+        )
+
+    return render(
+        request,
+        'gestao/confirmar_exclusao.html',
+        {
+            'configuracao': configuracao
+        }
+    )
 @login_required
 def listar_medicos(request):
 
@@ -593,5 +1081,23 @@ def detalhe_medico(request, medico_id):
         "gestao/detalhe_medico.html",
         {
             "medico": medico,
+        }
+    )
+
+def pacientes(request):
+
+    pacientes_lista = Paciente.objects.all().order_by('nome')
+
+    paginator = Paginator(pacientes_lista, 10)
+
+    page_number = request.GET.get('page')
+
+    pacientes = paginator.get_page(page_number)
+
+    return render(
+        request,
+        'gestao/pacientes.html',
+        {
+            'pacientes': pacientes
         }
     )
