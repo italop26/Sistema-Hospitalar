@@ -12,7 +12,7 @@ urlpatterns = [
     path(
         "",
         views.login_medico,
-        name="login_medico"
+        name="login"
     ),
 
     # Logout
@@ -68,6 +68,7 @@ urlpatterns = [
         views.confirmar_exame,
         name="confirmar_exame"
     ),
+    path('Receita/<int:atendimento_id>/', views.criar_receita, name='criar_receita')
 
 
 ]

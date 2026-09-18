@@ -1,3 +1,3 @@
 from django.test import TestCase
 
-# Create your tests here.
+# Medico: 098761:senha123,  	843024:poiuytre

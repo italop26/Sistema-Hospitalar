@@ -1,0 +1,198 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Atendimento - Consulta</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'static/styles/estilos.css' %}"
+    >
+
+</head>
+
+<body>
+
+<div class="layout-principal">
+
+    <main class="conteudo-principal">
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Consulta
+                </span>
+
+                <h1>
+                    Atendimento
+                </h1>
+
+                <p class="subtitulo">
+                    Informações registradas pelo médico.
+                </p>
+
+            </div>
+
+        </header>
+        
+
+        <section class="secao">
+
+            <div class="cabecalho-secao">
+
+            <h2>
+             Dados da consulta
+            </h2>
+
+        </div>
+
+
+        <div class="grade-perfil">
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                Especialidade
+                </span>
+
+                    <span class="valor-perfil">
+                {{ consulta.consulta.especialidade }}
+                </span>
+
+            </div>
+
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                Médico
+                </span>
+
+                <span class="valor-perfil">
+                {{ consulta.consulta.medico }}
+             </span>
+
+            </div>
+
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                Data
+                </span>
+
+                <span class="valor-perfil">
+                {{ consulta.consulta.data|date:"d/m/Y H:i" }}
+                </span>
+
+            </div>
+
+
+            <div class="item-perfil">
+
+                <span class="rotulo-perfil">
+                Turno
+                </span>
+
+                <span class="valor-perfil">
+                {{ consulta.consulta.turno }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="secao">
+
+        <div class="cabecalho-secao">
+
+        <h2>
+            Atendimento
+        </h2>
+
+        </div>
+
+
+    <div class="grade-perfil">
+
+        <div class="item-perfil">
+            <span class="rotulo-perfil">Queixa principal</span>
+            <span class="valor-perfil">
+                {{ consulta.queixa_principal }}
+            </span>
+        </div>
+
+
+            <div class="item-perfil">
+                <span class="rotulo-perfil">Sintomas</span>
+                <span class="valor-perfil">
+                {{ consulta.sintomas }}
+                </span>
+            </div>
+
+
+            <div class="item-perfil">
+                <span class="rotulo-perfil">Diagnóstico</span>
+                <span class="valor-perfil">
+                    {{ consulta.diagnostico }}
+                </span>
+            </div>
+
+
+            <div class="item-perfil">
+                <span class="rotulo-perfil">Conduta</span>
+                <span class="valor-perfil">
+                    {{ consulta.conduta }}
+                </span>
+         </div>
+
+
+            <div class="item-perfil">
+                <span class="rotulo-perfil">Prescrição</span>
+                <span class="valor-perfil">
+                {{ consulta.prescricao }}
+                </span>
+            </div>
+
+
+            <div class="item-perfil">
+                <span class="rotulo-perfil">Retorno</span>
+                <span class="valor-perfil">
+                {{ consulta.retorno }}
+                </span>
+            </div>
+
+
+            <div class="item-perfil">
+            <span class="rotulo-perfil">Observações</span>
+            <span class="valor-perfil">
+                {{ consulta.observacoes }}
+            </span>
+            </div>
+
+        </div>
+
+    </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

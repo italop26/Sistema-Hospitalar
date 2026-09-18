@@ -23,6 +23,14 @@
       <a href="{% url 'perfil' %}" class="item-menu">
         <span class="texto-menu">Perfil</span>
       </a>
+
+      <a href="{% url 'meus_atendimentos' %}" class="item-menu">
+        <span class="texto-menu">Meus Atendimentos</span>
+      </a>
+
+      <a href="{% url 'receitas' %}" class="item-menu">
+        <span class="texto-menu">Minhas Receitas</span>
+      </a>
     </nav>
 
     <a href="{% url 'login' %}" class="item-menu item-sair">
@@ -64,7 +72,7 @@
             <span class="titulo-registro">{{consulta.especialidade}} - {{ consulta.data|date:"d/m/Y" }}</span>
           </div>
           <span class="status-badge status-{{ consulta.status|lower }}">{{ consulta.status }}</span>
-          <a href="#" class="link-discreto">Ver relatório</a>
+          <a href="{% url 'ver_atendimento_consulta' consulta.id %}" class="link-discreto">Ver relatório</a>
         </div>
         {% empty %}
         <div class="estado-vazio">
@@ -88,7 +96,7 @@
             <span class="titulo-registro">{{ exame.tipo_exame}} - {{ exame.data|date:"d/m/Y" }} </span>
             <span class="subtitulo-registro">{{ exame.status }}</span>
           </div>
-          <a href="#" class="link-discreto">Ver resumo</a>
+          <a href="{% url 'ver_resultado_exame' exame.id %}" class="link-discreto">Ver resultado</a>
         </div>
         {% empty %}
         <div class="estado-vazio">

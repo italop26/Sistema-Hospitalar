@@ -5,6 +5,7 @@ from gestao_clinica.especialidades import TipoExame
 from gestao_clinica.models import Medico
 from gestao_clinica.turnos import Turno
 
+
 class Exame(models.Model):
 
     paciente = models.ForeignKey(
@@ -61,9 +62,9 @@ class AtendimentoExame(models.Model):
         on_delete=models.CASCADE,
         related_name="atendimentos_exame"
     )
-
-    observacoes = models.TextField(blank=True)
-    encaminhamento = models.TextField(blank=True)
+    resultado = models.CharField(max_length=1000, blank=True)
+    conclusao = models.CharField(max_length=1000, blank=True)
+    observacoes_tecnicas = models.CharField(max_length=1000, blank=True)
 
     criado_em = models.DateTimeField(auto_now_add=True)
     concluido_em = models.DateTimeField(null=True, blank=True)

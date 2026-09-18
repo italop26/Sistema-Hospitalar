@@ -56,6 +56,13 @@ class AtendimentoConsulta(models.Model):
         on_delete=models.CASCADE,
         related_name="atendimentos_consulta"
     )
+    queixa_principal = models.CharField(max_length=500, blank=True)
+    sintomas = models.CharField(max_length=1000, blank=True)
+    diagnostico = models.CharField(max_length=1000, blank=True)
+    conduta = models.CharField(max_length=1000, blank=True)
+    prescricao = models.CharField(max_length=1000, blank=True)
+    retorno = models.CharField(max_length=500, blank=True)
+    observacoes = models.CharField(max_length=1000, blank=True)
     observacoes = models.TextField(blank=True)
     encaminhamento = models.TextField(blank=True)
 

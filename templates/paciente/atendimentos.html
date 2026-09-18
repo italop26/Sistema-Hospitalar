@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Meus atendimentos</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'static/styles/estilos.css' %}"
+    >
+</head>
+
+<body>
+
+<div class="layout-principal">
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <div class="marca">
+                <span class="ponto"></span>
+                Sistema Hospitalar
+            </div>
+
+            <nav class="menu-lateral">
+
+                <a
+                    href="{% url 'meus_atendimentos' %}"
+                    class="item-menu ativo"
+                >
+                    <span class="icone-menu">📋</span>
+                    Atendimentos
+                </a>
+
+                <a
+                    href="{% url 'receitas' %}"
+                    class="item-menu"
+                >
+                    <span class="icone-menu">💊</span>
+                    Receitas
+                </a>
+
+            </nav>
+
+        </div>
+
+        <div class="item-sair">
+
+            <a
+                href="{% url 'logout_paciente' %}"
+                class="item-menu"
+            >
+                <span class="icone-menu">↪</span>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="conteudo-principal">
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Histórico
+                </span>
+
+                <h1>
+                    Meus atendimentos
+                </h1>
+
+                <p class="subtitulo">
+                    Consulte suas consultas e exames.
+                </p>
+
+            </div>
+
+        </header>
+
+
+       <section class="secao">
+
+        <div class="cabecalho-secao">
+            <h2>
+                Consultas
+            </h2>
+        </div>
+
+
+        {% for consulta in consultas %}
+
+            <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Consulta
+            </span>
+
+            <span class="valor-perfil">
+                {{ consulta.consulta.especialidade }}
+            </span>
+
+
+            <span class="rotulo-perfil">
+                Médico
+            </span>
+
+            <span class="valor-perfil">
+                {{ consulta.consulta.medico }}
+            </span>
+
+
+            <span class="rotulo-perfil">
+                Data
+            </span>
+
+            <span class="valor-perfil">
+                {{ consulta.consulta.data|date:"d/m/Y" }}
+            </span>
+
+
+            <span class="rotulo-perfil">
+                Turno
+            </span>
+
+            <span class="valor-perfil">
+                {{ consulta.consulta.turno }}
+            </span>
+
+
+            <a
+                href="{% url 'ver_atendimento_consulta' consulta.id %}"
+                class="botao-primario"
+            >
+                Ver atendimento
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p class="subtitulo">
+            Você ainda não possui consultas.
+        </p>
+
+        {% endfor %}
+
+    </section>
+
+
+    <section class="secao">
+
+        <div class="cabecalho-secao">
+        <h2>
+                Exames
+        </h2>
+        </div>
+
+
+        {% for exame in exames %}
+
+        <div class="item-perfil">
+
+            <span class="rotulo-perfil">
+                Exame
+            </span>
+
+            <span class="valor-perfil">
+                {{ exame.exame }}
+            </span>
+
+
+            <span class="rotulo-perfil">
+                Médico
+            </span>
+
+            <span class="valor-perfil">
+                {{ exame.medico }}
+            </span>
+
+
+            <span class="rotulo-perfil">
+                Data
+            </span>
+
+            <span class="valor-perfil">
+                {{ exame.data|date:"d/m/Y" }}
+            </span>
+
+
+            <span class="rotulo-perfil">
+                Turno
+            </span>
+
+            <span class="valor-perfil">
+                {{ exame.turno }}
+            </span>
+
+
+            {% if exame.status == "concluido" %}
+
+                <a
+                    href="{% url 'ver_resultado_exame' exame.id %}"
+                    class="botao-primario"
+                >
+                    Ver resultado
+                </a>
+
+            {% else %}
+
+                <span class="subtitulo">
+                    Análise ainda não concluída.
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        {% empty %}
+
+        <p class="subtitulo">
+            Você ainda não possui exames.
+        </p>
+
+        {% endfor %}
+
+    </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

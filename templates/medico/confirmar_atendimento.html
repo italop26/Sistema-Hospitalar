@@ -1,4 +1,3 @@
-```html
 {% load static %}
 
 <!DOCTYPE html>
@@ -142,7 +141,7 @@
             {% endif %}
 
 
-            <form method="POST">
+            <form method="POST" action="{% url 'medico:confirmar_consulta' objeto.id %}">
 
                 {% csrf_token %}
 
@@ -180,7 +179,7 @@
 
 
                 <a
-                    href="{% url 'medico:painel_medico' %}"
+                    href="{% url 'medico:painel' %}"
                     class="botao-secundario"
                 >
 
@@ -201,4 +200,4 @@
 </body>
 
 </html>
-```
+

@@ -99,6 +99,7 @@ class ConsultaService:
             quantidade_consultas = Consulta.objects.filter(
                 medico=medico,
                 data__date=data,
+                tipo_consulta=tipo_consulta,
                 turno=turno
             ).count()
 

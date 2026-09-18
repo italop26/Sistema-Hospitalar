@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import authenticate,login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,8 +7,8 @@ from datetime import timedelta
 from gestao_clinica.models import Medico
 from core.models_consulta import Consulta, AtendimentoConsulta
 from core.models_exames import Exame, AtendimentoExame
+from core.models_receitas import Receita
 
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 
 
@@ -20,6 +20,7 @@ def login_medico(request):
     if request.method == "POST":
         crm = request.POST.get("crm")
         senha = request.POST.get("senha")
+       
 
         user = authenticate(
             request,
@@ -45,6 +46,10 @@ def login_medico(request):
         "medico/login.html"
     )
 
+def logout_medico(request):
+    logout(request)
+    return redirect("gestao_clinica:login_medico")
+
 @login_required
 def perfil_medico(request):
     medico = getattr(request.user, "medico", None)
@@ -55,9 +60,7 @@ def perfil_medico(request):
         {
             'medico': medico
         }
-    )
-
-    
+    )    
 
 @login_required
 def painel_medico(request):
@@ -79,7 +82,6 @@ def painel_medico(request):
     )
 
     fim_dia = inicio_dia + timedelta(days=1)
-    # Erro 
     consultas = Consulta.objects.filter(
         medico=medico,
         data__gte=inicio_dia,
@@ -150,11 +152,12 @@ def iniciar_consulta(request, consulta_id):
     )
 
     atendimento, criado = AtendimentoConsulta.objects.get_or_create(
-        consulta=consulta,
-        defaults={
-            "paciente": consulta.paciente
-        }
+                            consulta=consulta,
+                            defaults={
+                                "paciente": consulta.paciente
+                            }
     )
+
 
     return render(
         request,
@@ -225,16 +228,9 @@ def salvar_atendimento_exame(request, exame_id):
     )
 
     if request.method == "POST":
-
-        atendimento.observacoes = request.POST.get(
-            "observacoes",
-            ""
-        )
-
-        atendimento.encaminhamento = request.POST.get(
-            "encaminhamento",
-            ""
-        )
+        atendimento.resultado = request.POST.get("resultado")
+        atendimento.conclusao = request.POST.get("conclusao")
+        atendimento.observacoes_tecnicas = request.POST.get("observacoes_tecnicas")
 
         atendimento.save()
 
@@ -263,41 +259,37 @@ def salvar_atendimento_consulta(request, consulta_id):
         return HttpResponseForbidden(
             "Usuário não possui acesso de médico."
         )
+    
 
+    print('Antes da consulta')
     consulta = get_object_or_404(
         Consulta,
         id=consulta_id,
-        medico=medico.nome,
+        medico=medico,
         especialidade=medico.especialidade
     )
 
-    atendimento = get_object_or_404(
-        AtendimentoConsulta,
-        consulta=consulta
-    )
+    atendimento = AtendimentoConsulta.objects.get_or_create(
+                                consulta=consulta,
+                                )
 
     if request.method == "POST":
-
-        atendimento.observacoes = request.POST.get(
-            "observacoes",
-            ""
-        )
-
-        atendimento.encaminhamento = request.POST.get(
-            "encaminhamento",
-            ""
-        )
-
-        atendimento.save()
+        atendimento.queixa_principal = request.POST.get("queixa_principal")
+        atendimento.sintomas = request.POST.get("sintomas")
+        atendimento.diagnostico = request.POST.get("diagnostico")
+        atendimento.conduta = request.POST.get("conduta")
+        atendimento.prescricao = request.POST.get("prescricao")
+        atendimento.retorno = request.POST.get("retorno")
+        atendimento.observacoes = request.POST.get("observacoes")     
 
         return redirect(
-            "medico:confirmar_exame",
+            "medico:confirmar_consulta",
             consulta_id=consulta.id
         )
-
+    
     return render(
         request,
-        "medico/atendimento_exame.html",
+        "medico/atendimento_consulta.html",
         {
             "consulta": consulta,
             "atendimento": atendimento,
@@ -319,7 +311,7 @@ def confirmar_consulta(request, consulta_id):
     consulta = get_object_or_404(
         Consulta,
         id=consulta_id,
-        medico=medico.nome,
+        medico=medico,
         especialidade=medico.especialidade
     )
 
@@ -357,10 +349,8 @@ def confirmar_consulta(request, consulta_id):
         consulta.status = "CONCLUIDO"
         consulta.save(update_fields=["status"])
 
-        logout(request)
-
         return redirect(
-            "gestao_clinica:login_medico"
+            "medico:painel"
         )
 
     return render(
@@ -420,7 +410,7 @@ def confirmar_exame(request, exame_id):
         atendimento.save()
 
         # Coloque aqui o valor correto do seu Status
-        exame.status = "ANALISE"
+        exame.status = "EM_ANALISE"
         exame.data_conclusao = timezone.now()
 
         exame.save(
@@ -429,9 +419,6 @@ def confirmar_exame(request, exame_id):
                 "data_conclusao"
             ]
         )
-
-        logout(request)
-
         return redirect(
             "gestao_clinica:login_medico"
         )
@@ -443,5 +430,31 @@ def confirmar_exame(request, exame_id):
             "tipo": "exame",
             "objeto": exame,
         }
+    )
+
+@login_required
+def criar_receita(request, atendimento_id):
+
+    atendimento = get_object_or_404(
+        AtendimentoConsulta,
+        id=atendimento_id
+    )
+
+    if request.method == "POST":
+        Receita.objects.create(
+            atendimento=atendimento,
+            medicamento=request.POST.get("medicamento"),
+            dosagem=request.POST.get("dosagem"),
+            frequencia=request.POST.get("frequencia"),
+            duracao=request.POST.get("duracao"),
+            observacoes=request.POST.get("observacoes")
+        )
+
+        return redirect("atendimento_consulta", consulta_id=atendimento.consulta.id)
+
+    return render(
+        request,
+        "core/receita.html",
+        {"atendimento": atendimento}
     )
 

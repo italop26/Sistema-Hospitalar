@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Paciente
 from django.contrib.auth.models import User 
@@ -12,8 +12,10 @@ from api.services.consulta_service import ConsultaService
 from api.services.exames_service import ExameService
 from datetime import datetime
 from gestao_clinica.models import HorarioMedico
-from gestao_clinica.turnos import Turno, DiaSemana
 from gestao_clinica.especialidades import TIPO_EXAME_ESPECIALIDADE
+from core.models_receitas import Receita
+from core.models_consulta import AtendimentoConsulta
+from core.models_exames import AtendimentoExame
 
 
 def login_view(request):
@@ -115,6 +117,7 @@ def marcacao(request):
                 medico = ConsultaService.escolher_medico(
                     especialidade=especialidade,
                     data=data,
+                    tipo_consulta=tipo_consulta,
                     turno=turno
                 )
 
@@ -342,12 +345,114 @@ def ver_consultas(request):
     paginator = Paginator(consultas, 10)
     page = request.GET.get("page")
 
-    exames = paginator.get_page(page)
+    consultas = paginator.get_page(page)
     return render(request, 'paciente/ver_consultas.html', {'consultas': consultas})
 
 def sair(request):
     logout(request)
     return redirect('login')
-    
 
+@login_required
+def receitas(request):
+    paciente = get_object_or_404(
+        Paciente,
+        user=request.user
+    )
+
+    receitas = Receita.objects.filter(
+        atendimento__paciente=paciente
+    ).select_related(
+        "atendimento"
+    )
+
+    return render(
+        request,
+        "paciente/receitas.html",
+        {"receitas": receitas,
+         'paciente': paciente}
+    )
+    
+@login_required
+def meus_atendimentos(request):
+    
+    paciente = get_object_or_404(
+        Paciente,
+        user=request.user
+    )
+
+    consultas = AtendimentoConsulta.objects.filter(
+        paciente=paciente
+    )
+
+    exames = AtendimentoExame.objects.filter(
+        paciente=paciente
+    )
+
+    return render(
+        request,
+        "paciente/atendimentos.html",
+        {
+            "consultas": consultas,
+            "exames": exames,
+            'paciente': paciente
+        }
+    )
+
+@login_required
+def ver_atendimento_consulta(request, consulta_id):
+    paciente = get_object_or_404(
+        Paciente,
+        user=request.user
+    )
+
+    consulta = get_object_or_404(
+        AtendimentoConsulta,
+        id=consulta_id,
+        paciente=paciente
+    )
+
+
+    return render(
+        request,
+        "paciente/atendimento_consulta.html",
+        {
+            "consulta": consulta,
+            'paciente': paciente
+        }
+    )
+
+@login_required
+def ver_resultado_exame(request, exame_id):
+
+    paciente = get_object_or_404(
+        Paciente,
+        user=request.user
+    )
+
+    exame = get_object_or_404(
+        AtendimentoExame,
+        id=exame_id,
+        paciente=paciente
+    )
+
+    if exame.status != "concluido":
+        return render(
+            request,
+            "paciente/resultado_exame.html",
+            {
+                "exame": exame,
+                "disponivel": False,
+                "paciente": paciente
+            }
+        )
+
+    return render(
+        request,
+        "paciente/ver_resultado_exame.html",
+        {
+            "exame": exame,
+            "disponivel": True,
+            "paciente": paciente
+        }
+    )
     

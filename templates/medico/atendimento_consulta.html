@@ -1,4 +1,3 @@
-```html
 {% load static %}
 
 <!DOCTYPE html>
@@ -40,7 +39,7 @@
             <nav class="menu-lateral">
 
                 <a
-                    href="{% url 'medico:painel_medico' %}"
+                    href="{% url 'medico:painel' %}"
                     class="item-menu ativo"
                 >
 
@@ -54,7 +53,7 @@
 
 
                 <a
-                    href="{% url 'medico:perfil_medico' %}"
+                    href="{% url 'medico:perfil' %}"
                     class="item-menu"
                 >
 
@@ -192,9 +191,100 @@
             <form
                 method="POST"
                 class="formulario-secao"
+                action="{% url 'medico:salvar_atendimento_consulta' consulta.id %}"
             >
 
                 {% csrf_token %}
+
+
+                <div class="campo">
+
+                    <label for="queixa_principal">
+                        Queixa principal
+                    </label>
+
+                    <textarea
+                        id="queixa_principal"
+                        name="queixa_principal"
+                        placeholder="Registre a queixa principal do paciente..."
+                    >{{ atendimento.queixa_principal }}</textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="sintomas">
+                        Sintomas
+                    </label>
+
+                    <textarea
+                        id="sintomas"
+                        name="sintomas"
+                        placeholder="Registre os sintomas apresentados..."
+                    >{{ atendimento.sintomas }}</textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="diagnostico">
+                        Diagnóstico
+                    </label>
+
+                    <textarea
+                        id="diagnostico"
+                        name="diagnostico"
+                        placeholder="Registre o diagnóstico..."
+                    >{{ atendimento.diagnostico }}</textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="conduta">
+                        Conduta
+                    </label>
+
+                    <textarea
+                        id="conduta"
+                        name="conduta"
+                        placeholder="Registre a conduta adotada..."
+                    >{{ atendimento.conduta }}</textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="prescricao">
+                        Prescrição
+                    </label>
+
+                    <textarea
+                        id="prescricao"
+                        name="prescricao"
+                        placeholder="Registre a prescrição e orientações..."
+                    >{{ atendimento.prescricao }}</textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="retorno">
+                        Retorno
+                    </label>
+
+                    <textarea
+                        id="retorno"
+                        name="retorno"
+                        placeholder="Registre as orientações sobre o retorno..."
+                    >{{ atendimento.retorno }}</textarea>
+
+                </div>
 
 
                 <div class="campo">
@@ -206,23 +296,8 @@
                     <textarea
                         id="observacoes"
                         name="observacoes"
-                        placeholder="Registre as informações da consulta..."
+                        placeholder="Registre informações adicionais..."
                     >{{ atendimento.observacoes }}</textarea>
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="encaminhamento">
-                        Encaminhamento
-                    </label>
-
-                    <textarea
-                        id="encaminhamento"
-                        name="encaminhamento"
-                        placeholder="Registre um possível encaminhamento..."
-                    >{{ atendimento.encaminhamento }}</textarea>
 
                 </div>
 
@@ -231,8 +306,16 @@
                     type="submit"
                     class="botao-primario"
                 >
-                    Continuar
+                    Salvar atendimento
                 </button>
+
+
+                <a
+                    href="{% url 'medico:criar_receita' atendimento.id %}"
+                    class="botao-primario"
+                >
+                    Receita
+                </a>
 
             </form>
 
@@ -246,4 +329,3 @@
 
 </body>
 </html>
-```

@@ -1,0 +1,135 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Resultado do exame</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'static/styles/estilos.css' %}"
+    >
+
+</head>
+
+<body>
+
+<div class="layout-principal">
+
+    <main class="conteudo-principal">
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Exame
+                </span>
+
+                <h1>
+                    Resultado
+                </h1>
+
+                <p class="subtitulo">
+                    Resultado registrado pela equipe responsável.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        {% if disponivel %}
+
+            <section class="secao">
+
+                <div class="cabecalho-secao">
+                    <h2>Resultado do exame</h2>
+                </div>
+
+
+                <div class="grade-perfil">
+
+                    <div class="item-perfil">
+
+                        <span class="rotulo-perfil">
+                            Resultado
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ atendimento.resultado }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="item-perfil">
+
+                        <span class="rotulo-perfil">
+                            Conclusão
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ atendimento.conclusao }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="item-perfil">
+
+                        <span class="rotulo-perfil">
+                            Observações técnicas
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ atendimento.observacoes_tecnicas }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="item-perfil">
+
+                        <span class="rotulo-perfil">
+                            Observações
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ atendimento.observacoes }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        {% else %}
+
+            <section class="secao">
+
+                <p class="subtitulo">
+                    A análise deste exame ainda não foi concluída.
+                </p>
+
+            </section>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Início | MedAgenda — Central de Exames</title>
+<link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+
+</head>
+<body>
+<div class="layout-principal">
+
+    <aside class="barra-lateral">
+        <div class="marca">
+            Clínica
+        </div>
+
+        <nav class="menu-lateral">
+
+            <a href="{% url 'perfil' %}" class="item-menu">
+                <span class="icone-menu">👤</span>
+                Perfil
+            </a>
+
+            <a href="{% url 'meus_atendimentos' %}" class="item-menu">
+                <span class="icone-menu">📋</span>
+                Atendimentos
+            </a>
+
+            <a href="{% url 'receitas' %}" class="item-menu">
+                <span class="icone-menu">💊</span>
+                Receitas
+            </a>
+
+            <a href="{% url 'logout_paciente' %}" class="item-menu item-sair">
+                <span class="icone-menu">🚪</span>
+                Sair
+            </a>
+
+        </nav>
+    </aside>
+
+
+    <main class="conteudo-principal">
+
+        <header class="cabecalho-principal">
+            <div>
+                <span class="rotulo">Receitas</span>
+                <h1>Minhas receitas</h1>
+                <p class="subtitulo">
+                    Consulte as receitas prescritas durante seus atendimentos.
+                </p>
+            </div>
+        </header>
+
+
+        <section class="secao">
+
+            <div class="cabecalho-secao">
+                <h2>Receitas prescritas</h2>
+            </div>
+
+
+            <div class="grade-perfil">
+
+                {% for receita in receitas %}
+
+                    <div class="item-perfil">
+
+                        <span class="rotulo-perfil">
+                            Medicamento
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ receita.medicamento }}
+                        </span>
+
+
+                        <span class="rotulo-perfil">
+                            Dosagem
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ receita.dosagem }}
+                        </span>
+
+
+                        <span class="rotulo-perfil">
+                            Frequência
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ receita.frequencia }}
+                        </span>
+
+
+                        <span class="rotulo-perfil">
+                            Duração
+                        </span>
+
+                        <span class="valor-perfil">
+                            {{ receita.duracao }}
+                        </span>
+
+
+                        {% if receita.observacoes %}
+
+                            <span class="rotulo-perfil">
+                                Observações
+                            </span>
+
+                            <span class="valor-perfil">
+                                {{ receita.observacoes }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="item-perfil">
+                        <span class="valor-perfil">
+                            Nenhuma receita foi encontrada.
+                        </span>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+</body>
