@@ -41,14 +41,14 @@
         <div class="campo">
           <label for="identificador">CPF</label>
           <div class="caixa-entrada">
-            <input type="text" placeholder="000.000.000-00" name="cpf" value='{{ paciente.cpf }}' required>
+            <input type="text" placeholder="000.000.000-00" maxlength="14" name="cpf" value='{{ paciente.cpf }}' id="cpf-usuario" required>
           </div>
         </div>
 
         <div class="campo">
           <label for="senha-login">Senha</label>
           <div class="caixa-entrada">
-            <input type="password" name="senha" required>
+            <input type="password" name="senha" id="senha-login" required>
             <button type="button" class="alternar-visibilidade" data-alvo="senha-login">MOSTRAR</button>
           </div>
         </div>
@@ -73,6 +73,117 @@
         <p>Precisa de ajuda para agendar um exame? Ligue para a Central de Atendimento: (00) 0000-0000, de segunda a sexta, das 7h às 19h.</p>
       </div>
     </div>
+
+    <script>
+      function formatarCPF(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+
+    return cpf
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+
+function formatarTelefone(telefone) {
+    telefone = telefone.replace(/\D/g, '');
+
+    return telefone
+        .replace(/^(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{5})(\d)/, '$1-$2');
+}
+
+
+function formatarCRM(crm) {
+    return crm.replace(/\D/g, '');
+}
+
+// ========================================
+// APLICAR MÁSCARAS
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const cpf = document.getElementById('cpf-usuario');
+    const telefone = document.getElementById('telefone-usuario');
+    const crm = document.getElementById('crm');
+
+
+    // CPF
+    if (cpf) {
+
+        // Formata caso já exista um CPF
+        cpf.value = formatarCPF(cpf.value);
+
+        // Formata enquanto digita
+        cpf.addEventListener('input', function () {
+            cpf.value = formatarCPF(cpf.value);
+        });
+    }
+
+    // CRM
+    if (crm) {
+
+        crm.value = formatarCRM(crm.value);
+
+        crm.addEventListener('input', function () {
+            crm.value = formatarCRM(crm.value);
+        });
+    }
+
+
+    // ========================================
+    // REMOVER MÁSCARAS ANTES DE ENVIAR
+    // ========================================
+
+    const form = document.querySelector('form');
+
+    if (form) {
+        form.addEventListener('submit', function () {
+
+            if (cpf) {
+                cpf.value = cpf.value.replace(/\D/g, '');
+            }
+
+            if (telefone) {
+                telefone.value = telefone.value.replace(/\D/g, '');
+            }
+
+            if (crm) {
+                crm.value = crm.value.replace(/\D/g, '');
+            }
+
+        });
+    }
+
+});
+
+// ========================================
+// MOSTRAR / OCULTAR SENHA
+// ========================================
+
+const botoesSenha = document.querySelectorAll('.alternar-visibilidade');
+
+botoesSenha.forEach(botao => {
+
+    botao.addEventListener('click', () => {
+
+        const input = botao.parentElement.querySelector('input');
+
+        if (!input) return;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            botao.textContent = 'Ocultar';
+        } else {
+            input.type = 'password';
+            botao.textContent = 'Mostrar';
+        }
+
+    });
+
+});
+    </script>
   </main>
 
 </div>

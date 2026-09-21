@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Painel Médico</title>
+
+    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+
+</head>
+
+<body>
+
+<div class="layout-principal">
+
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <div class="marca">
+
+                <span class="ponto"></span>
+
+                Sistema Hospitalar
+
+            </div>
+
+
+            <nav class="menu-lateral">
+
+                <a
+                    href="{% url 'medico:painel' %}"
+                    class="item-menu ativo"
+                >
+
+                    <span class="icone-menu">
+                        🏠
+                    </span>
+
+                    Painel
+
+                </a>
+
+
+                <a
+                    href="{% url 'medico:perfil' %}"
+                    class="item-menu"
+                >
+
+                    <span class="icone-menu">
+                        👤
+                    </span>
+
+                    Perfil
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="item-sair">
+
+            <a
+                href="{% url 'medico:logout_medico' %}"
+                class="item-menu"
+            >
+
+                <span class="icone-menu">
+                    ↪
+                </span>
+
+                Sair
+
+            </a>
+
+        </div>
+
+    </aside>
+
+    {% block content %}
+    {% endblock %}

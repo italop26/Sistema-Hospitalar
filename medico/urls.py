@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views import logout_medico
 
 
 app_name = "medico"
@@ -18,7 +19,7 @@ urlpatterns = [
     # Logout
     path(
         "logout/",
-        views.logout,
+        logout_medico,
         name="logout_medico"
     ),
     # Perfil

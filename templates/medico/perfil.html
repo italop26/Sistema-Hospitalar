@@ -1,93 +1,6 @@
-{% load static %}
+{% extends "medico/base.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Perfil Médico</title>
-
-    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
-
-</head>
-
-<body>
-
-<div class="layout-principal">
-
-
-    <aside class="barra-lateral">
-
-        <div>
-
-            <div class="marca">
-
-                <span class="ponto"></span>
-
-                Sistema Hospitalar
-
-            </div>
-
-
-            <nav class="menu-lateral">
-
-                <a
-                    href="{% url 'medico:painel' %}"
-                    class="item-menu"
-                >
-
-                    <span class="icone-menu">
-                        🏠
-                    </span>
-
-                    Painel
-
-                </a>
-
-
-                <a
-                    href="{% url 'medico:perfil' %}"
-                    class="item-menu ativo"
-                >
-
-                    <span class="icone-menu">
-                        👤
-                    </span>
-
-                    Perfil
-
-                </a>
-
-            </nav>
-
-        </div>
-
-
-        <div class="item-sair">
-
-            <a
-                href="{% url 'medico:logout_medico' %}"
-                class="item-menu"
-            >
-
-                <span class="icone-menu">
-                    ↪
-                </span>
-
-                Sair
-
-            </a>
-
-        </div>
-
-    </aside>
+{% block content %}
 
 
     <main class="conteudo-principal">
@@ -189,10 +102,68 @@
                     </span>
 
                 </div>
+            </section>
 
-            </div>
+            <section class="secao">
 
-        </section>
+            <div class="cabecalho-secao">
+
+                <h2>
+                    Consultas
+                </h2>
+
+            </div>  
+                    <div class="item-perfil">
+                        {% for vaga in vagas %}
+                         
+                        {% if vaga.tipo_consulta != none %}
+                                <span class="rotulo-perfil">
+                                Consulta 
+                                </span>
+
+                                <span class="valor-perfil">
+                                {{vaga.tipo_consulta}}
+                            </span>
+                            {% else %}
+                                <span class="rotulo-perfil">
+                                Exame 
+                                </span>
+
+                                <span class="valor-perfil">
+                                {{vaga.tipo_exame}}
+                                </span>
+                                
+                            {% endif %}
+
+                            <span class="rotulo-perfil">
+                                Data 
+                            </span>
+
+                            <span class="valor-perfil">
+                                {{vaga.dia}}
+                            </span>
+
+                            <span class="rotulo-perfil">
+                                Turno 
+                            </span>
+                        
+                            <span class="valor-perfil">
+                                {{vaga.turno}}
+                            </span>
+
+                            <span class="rotulo-perfil">
+                                Quantidade de Vagas
+                            </span>
+                        
+                            <span class="valor-perfil">
+                                {{vaga.quantidade_vagas}}
+                            </span>
+                            {% endfor %}
+
+                        
+            </section>
+
+        
 
 
         <footer class="rodape">
@@ -208,4 +179,4 @@
 
 </body>
 </html>
-
+{% endblock%}

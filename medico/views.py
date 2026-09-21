@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from datetime import timedelta
-from gestao_clinica.models import Medico
+from gestao_clinica.models import HorarioMedico
 from core.models_consulta import Consulta, AtendimentoConsulta
 from core.models_exames import Exame, AtendimentoExame
 from core.models_receitas import Receita
@@ -48,17 +48,20 @@ def login_medico(request):
 
 def logout_medico(request):
     logout(request)
-    return redirect("gestao_clinica:login_medico")
+    return redirect("medico:login")
 
 @login_required
 def perfil_medico(request):
     medico = getattr(request.user, "medico", None)
 
+    vagas = HorarioMedico.objects.filter(medico=medico)
+
     return render(
         request,
         'medico/perfil.html',
         {
-            'medico': medico
+            'medico': medico,
+            'vagas': vagas
         }
     )    
 

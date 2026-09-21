@@ -1,45 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Início | MedAgenda — Central de Exames</title>
-<link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+{% extends "paciente/base.html" %}
 
-</head>
-<body>
-<div class="layout-principal">
-
-    <aside class="barra-lateral">
-        <div class="marca">
-            Clínica
-        </div>
-
-        <nav class="menu-lateral">
-
-            <a href="{% url 'perfil' %}" class="item-menu">
-                <span class="icone-menu">👤</span>
-                Perfil
-            </a>
-
-            <a href="{% url 'meus_atendimentos' %}" class="item-menu">
-                <span class="icone-menu">📋</span>
-                Atendimentos
-            </a>
-
-            <a href="{% url 'receitas' %}" class="item-menu">
-                <span class="icone-menu">💊</span>
-                Receitas
-            </a>
-
-            <a href="{% url 'logout_paciente' %}" class="item-menu item-sair">
-                <span class="icone-menu">🚪</span>
-                Sair
-            </a>
-
-        </nav>
-    </aside>
+{% block content %}
 
 
     <main class="conteudo-principal">
@@ -135,4 +96,5 @@
     </main>
 
 </div>
-</body>
+
+{% endblock %}

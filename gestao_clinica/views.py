@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Q
 from gestao_clinica.choices import Status 
 from gestao_clinica.especialidades import Especialidade, TipoConsulta, TipoExame
 from .models import Gestor, TipoExame, HorarioMedico
-from gestao_clinica.especialidades import TIPO_EXAME_ESPECIALIDADE
 from gestao_clinica.turnos import Turno, DiaSemana
 from django.contrib.auth.models import User
 from medico.models import Medico

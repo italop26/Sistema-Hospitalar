@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Início | MedAgenda — Central de Exames</title>
+<link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
+
+
+</head>
+<body>
+  
+  
+    <div class="marca">
+      <span class="ponto"></span>
+      <span>MedAgenda</span>
+    </div>
+
+    <nav class="navegacao">
+      <a href="{% url 'marcacao'%}" class="item-menu">
+        <span class="texto-menu">marcacao</span>
+      </a>
+        
+      <a href="{% url 'perfil' %}" class="item-menu">
+        <span class="texto-menu">Perfil</span>
+      </a>
+
+      <a href="{% url 'meus_atendimentos' %}" class="item-menu">
+        <span class="texto-menu">Meus Atendimentos</span>
+      </a>
+
+      <a href="{% url 'receitas' %}" class="item-menu">
+        <span class="texto-menu">Minhas Receitas</span>
+      </a>
+    </nav>
+
+    <a href="{% url 'login' %}" class="item-menu item-sair">
+      
+      <span class="titulo-navegacao">Sair</span>
+    </a>
+
+{% block content %}
+{% endblock %}

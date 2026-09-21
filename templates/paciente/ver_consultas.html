@@ -1,46 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados</title>
-    <link rel="stylesheet" href="{% static 'static/styles/estilos.css' %}">
-</head>
-<body>
-      <!-- BARRA LATERAL: navegação entre páginas -->
-  <aside class="barra-lateral">
-    <div class="marca">
-      <span class="ponto"></span>
-      <span>MedAgenda</span>
-    </div>
+{% extends "paciente/base.html" %}
 
-    <nav class="menu-lateral">
-      <a href="#" class="item-menu ativo">
-        <span class="icone-menu">1</span>
-        <span class="texto-menu">Marcação</span>
-      </a>
-      <a href="#" class="item-menu">
-        <span class="icone-menu">2</span>
-        <span class="texto-menu">Meus Exames</span>
-      </a>
-      <a href="#" class="item-menu">
-        <span class="icone-menu">3</span>
-        <span class="texto-menu">Resultados</span>
-      </a>
-      <a href="#" class="item-menu">
-        <span class="icone-menu">4</span>
-        <span class="texto-menu">Perfil</span>
-      </a>
-
-      <h1>CONSULTAS</h1>
-    </nav>
-
-    <a href="#" class="item-menu item-sair">
-      <span class="icone-menu">⏻</span>
-      <span class="texto-menu">Sair</span>
-    </a>
-  </aside>
+{% block content %}
 
   <div class="lista-registros">
 
@@ -84,5 +44,4 @@
 
 </div>
   
-</body>
-</html>
+{% endblock %}

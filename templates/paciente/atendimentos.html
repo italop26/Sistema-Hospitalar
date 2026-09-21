@@ -1,71 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "paciente/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Meus atendimentos</title>
-
-    <link
-        rel="stylesheet"
-        href="{% static 'static/styles/estilos.css' %}"
-    >
-</head>
-
-<body>
-
-<div class="layout-principal">
-
-    <aside class="barra-lateral">
-
-        <div>
-
-            <div class="marca">
-                <span class="ponto"></span>
-                Sistema Hospitalar
-            </div>
-
-            <nav class="menu-lateral">
-
-                <a
-                    href="{% url 'meus_atendimentos' %}"
-                    class="item-menu ativo"
-                >
-                    <span class="icone-menu">📋</span>
-                    Atendimentos
-                </a>
-
-                <a
-                    href="{% url 'receitas' %}"
-                    class="item-menu"
-                >
-                    <span class="icone-menu">💊</span>
-                    Receitas
-                </a>
-
-            </nav>
-
-        </div>
-
-        <div class="item-sair">
-
-            <a
-                href="{% url 'logout_paciente' %}"
-                class="item-menu"
-            >
-                <span class="icone-menu">↪</span>
-                Sair
-            </a>
-
-        </div>
-
-    </aside>
+{% block content %}
 
 
     <main class="conteudo-principal">
@@ -242,5 +177,4 @@
 
 </div>
 
-</body>
-</html>
+{% endblock%}

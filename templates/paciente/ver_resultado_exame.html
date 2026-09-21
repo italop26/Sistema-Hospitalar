@@ -1,0 +1,213 @@
+{% extends "paciente/base.html" %}
+
+{% block content %}
+
+
+    <main class="conteudo-principal">
+
+
+        <header class="cabecalho-principal">
+
+            <div>
+
+                <span class="rotulo">
+                    Exame
+                </span>
+
+                <h1>
+                    Resultado do exame
+                </h1>
+
+                <p class="subtitulo">
+                    Consulte as informações e o resultado da análise.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <section class="secao">
+
+
+            <div class="cabecalho-secao">
+
+                <h2>
+                    Dados do exame
+                </h2>
+
+            </div>
+
+
+            <div class="grade-perfil">
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Exame
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.exame }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Médico
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.exame.medico }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Data
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.exame.data|date:"d/m/Y H:i" }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Turno
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.exame.turno }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        {% if disponivel %}
+
+
+        <section class="secao">
+
+
+            <div class="cabecalho-secao">
+
+                <h2>
+                    Resultado
+                </h2>
+
+            </div>
+
+
+            <div class="grade-perfil">
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Resultado
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.resultado }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Conclusão
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.conclusao }}
+                    </span>
+
+                </div>
+
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Observações técnicas
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.observacoes_tecnicas }}
+                    </span>
+
+                </div>
+
+
+                {% if exame.concluido_em %}
+
+                <div class="item-perfil">
+
+                    <span class="rotulo-perfil">
+                        Concluído em
+                    </span>
+
+                    <span class="valor-perfil">
+                        {{ exame.concluido_em|date:"d/m/Y H:i" }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </section>
+
+
+        {% else %}
+
+
+        <section class="secao">
+
+
+            <div class="cabecalho-secao">
+
+                <h2>
+                    Resultado indisponível
+                </h2>
+
+            </div>
+
+
+            <p class="subtitulo">
+                A análise deste exame ainda não foi concluída.
+                O resultado será disponibilizado após a conclusão.
+            </p>
+
+
+        </section>
+
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+{% endblock %}
